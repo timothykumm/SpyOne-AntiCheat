@@ -8,13 +8,11 @@ use Devs\Punishment\Methods\Message;
 use Devs\Punishment\Punishment;
 use Devs\Utils\BlockUtil;
 use Devs\Utils\PlayerUtil;
-use Devs\Utils\TickUtil;
-use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityEvent;
 use pocketmine\event\player\PlayerEvent;
 use pocketmine\player\Player;
 
-class AntiReach extends ModuleBase implements Module
+class AntiKillaura extends ModuleBase implements Module
 {
 
 	private array $damagerPos = array(), $targetPos = array();
@@ -22,7 +20,7 @@ class AntiReach extends ModuleBase implements Module
 
 	public function getName() : String
 	{
-		return "AntiReach";
+		return "AntiKillaura";
 	}
 
 	public function warningLimit(): int
@@ -32,12 +30,12 @@ class AntiReach extends ModuleBase implements Module
 
 	public function punishment(): Punishment
 	{
-		return new Message("Step detected");
+		return new Message("Killaura detected");
 	}
 
 	public function setup(): void
 	{
-		$this->counter = new TickUtil(0);
+
 	}
 
 	public function checkCombat(EntityEvent $event, Player $damager, Player $target): string

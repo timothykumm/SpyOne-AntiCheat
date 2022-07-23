@@ -8,6 +8,7 @@ use Devs\Utils\PlayerUtil;
 use pocketmine\data\bedrock\EntityLegacyIds;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerEntityInteractEvent;
 use pocketmine\event\player\PlayerJumpEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
@@ -39,21 +40,32 @@ class ModuleEventListener implements Listener
 
 		if(PlayerUtil::isPlayer($target->getNameTag(), $target->getId())) {
 			$targetToPlayer = PlayerUtil::entityToPlayer($target->getNameTag(), $target->getId());
-			PlayerUtil::addlastDamageCausedServerTick(PlayerUtil::entityToPlayer($target->getNameTag(), $target->getId()), SpyOne::getInstance()->getServer()->getTick());
+			PlayerUtil::addlastDamageCausedByEntityServerTick(PlayerUtil::entityToPlayer($target->getNameTag(), $target->getId()), SpyOne::getInstance()->getServer()->getTick());
 
 			if (PlayerUtil::isPlayer($damager->getNameTag(), $damager->getId())) {
 				$damagerToPlayer = PlayerUtil::entityToPlayer($damager->getNameTag(), $damager->getId());
 				$playerIndex = PlayerUtil::playerExistsInArray($damagerToPlayer, WatchEventListener::$spyOnePlayerList);
 
 				if ($playerIndex == -1) return;
-				$output = WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiReach")->checkCombat($event, $damagerToPlayer, $targetToPlayer);
+
+				$output = WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiKillaura")->checkCombat($event, $damagerToPlayer, $targetToPlayer);
 
 				if($output != "")
-			{
-				$damagerToPlayer->sendMessage($output);
-			}
+				{
+					$damagerToPlayer->sendMessage($output);
+				}
+
+				//$output = WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiNoKnockback")->checkCombat($event, $damagerToPlayer, $targetToPlayer);
+
+
 			}
 		}
+	}
+
+	public function onPlayerHit(PlayerEntityInteractEvent $event) {
+
+		//$event->getPlayer()->sendMessage($event->getClickPosition()->cross($event->getPlayer()->getPosition()->asVector3()));
+
 	}
 
 	public function onJump(PlayerJumpEvent $event) {

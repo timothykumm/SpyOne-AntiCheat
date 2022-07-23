@@ -8,7 +8,7 @@ use pocketmine\player\Player;
 class PlayerUtil
 {
 
-	private static array $damageCausedByEntityServerTick = array(), $jumpServerTick = array(), $deathServerTick = array(), $respawnServerTick = array(), $jumpPosition = array();
+	private static array $damageCausedByEntityServerTick = array(), $damageCausedByPlayerServerTick = array(), $jumpServerTick = array(), $deathServerTick = array(), $respawnServerTick = array(), $jumpPosition = array();
 
 	static function getPosition(Player $player): array
 	{
@@ -32,7 +32,7 @@ class PlayerUtil
 
 	static function movementSpeedInfluenced(Player $player): bool
 	{
-		return ($player->isFlying() || $player->isCreative() || $player->isGliding() || $player->isInsideOfSolid() || $player->getMovementSpeed() > 0.13 || (SpyOne::getInstance()->getServer()->getTick() - self::getlastDamageCausedServerTick($player)) < 30 && BlockUtil::blockAroundString(PlayerUtil::getPosition($player),  $player->getWorld(), 1, 1, 1, "Stairs"));
+		return ($player->isFlying() || $player->isCreative() || $player->isGliding() || $player->isInsideOfSolid() || $player->getMovementSpeed() > 0.13 || (SpyOne::getInstance()->getServer()->getTick() - self::getlastDamageCausedByEntityServerTick($player)) < 30 && BlockUtil::blockAroundString(PlayerUtil::getPosition($player),  $player->getWorld(), 1, 1, 1, "Stairs"));
 	}
 
 	static function flyingInfluenced(Player $player): bool
@@ -80,7 +80,7 @@ class PlayerUtil
 		return false;
 	}
 
-	static function addlastDamageCausedServerTick(Player $player, int $serverTick): void
+	static function addlastDamageCausedByEntityServerTick(Player $player, int $serverTick): void
 	{
 		$playerPositionInArray = self::playerXuidExistsInArray($player, self::$damageCausedByEntityServerTick);
 		if($playerPositionInArray != -1) {
@@ -89,6 +89,17 @@ class PlayerUtil
 		}
 
 		self::$damageCausedByEntityServerTick += [$player->getXuid() => $serverTick];
+	}
+
+	static function addlastDamageCausedByPlayerServerTick(Player $player, int $serverTick): void
+	{
+		$playerPositionInArray = self::playerXuidExistsInArray($player, self::$damageCausedByPlayerServerTick);
+		if($playerPositionInArray != -1) {
+			self::$damageCausedByPlayerServerTick[$player->getXuid()] = $serverTick;
+			return;
+		}
+
+		self::$damageCausedByPlayerServerTick += [$player->getXuid() => $serverTick];
 	}
 
 	static function addlastJumpServerTick(Player $player, int $serverTick): void
@@ -134,9 +145,15 @@ class PlayerUtil
 		self::$jumpPosition[] = $pos;
 	}
 
-	static function getlastDamageCausedServerTick(Player $player): int
+	static function getlastDamageCausedByEntityServerTick(Player $player): int
 	{
 		$serverTick =  ClientUtil::getValueOfArray(self::$damageCausedByEntityServerTick, $player->getXuid());
+		return $serverTick != null ? $serverTick : 0;
+	}
+
+	static function getlastDamageCausedByPlayerServerTick(Player $player): int
+	{
+		$serverTick =  ClientUtil::getValueOfArray(self::$damageCausedByPlayerServerTick, $player->getXuid());
 		return $serverTick != null ? $serverTick : 0;
 	}
 

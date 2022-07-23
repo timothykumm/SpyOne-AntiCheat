@@ -2,6 +2,8 @@
 
 namespace Devs\Modules;
 
+use Devs\Modules\Combat\AntiKillaura;
+use Devs\Modules\Combat\AntiNoKnockback;
 use Devs\Modules\Combat\AntiReach;
 use Devs\Modules\Movement\AntiGlide;
 use Devs\Modules\Movement\AntiHighJump;
@@ -24,7 +26,8 @@ class ModuleBase
 			"AntiHighJump" => new AntiHighJump(),
 			"AntiStep" => new AntiStep(),
 			"AntiGlide" => new AntiGlide(),
-			"AntiReach" => new AntiReach()
+			"AntiKillaura" => new AntiKillaura(),
+			"AntiNoKnockback" => new AntiNoKnockback()
 		);
 
 		if($setup) $this->setupModules();
