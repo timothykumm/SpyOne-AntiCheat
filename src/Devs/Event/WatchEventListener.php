@@ -23,7 +23,7 @@ class WatchEventListener implements Listener
 
 		self::$spyOnePlayerList += [$event->getPlayer()->getXuid() => $event->getPlayer()];
 		self::$spyOnePlayerModuleList[] = $this->moduleBase;
-		$event->getPlayer()->sendMessage(SpyOne::PREFIX . "SpyOne is watching you!");
+		$event->getPlayer()->sendMessage(SpyOne::PREFIX . "is watching you!");
 	}
 
 	public function onLeave(PlayerQuitEvent $event) {

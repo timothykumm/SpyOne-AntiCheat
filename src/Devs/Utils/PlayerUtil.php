@@ -70,6 +70,16 @@ class PlayerUtil
 		return null;
 	}
 
+	static function isPlayer($entityNameTag, $entityId) : bool
+	{
+		foreach (SpyOne::getInstance()->getServer()->getOnlinePlayers() as $onlinePlayer) {
+			if ((strcmp($onlinePlayer->getNameTag(),$entityNameTag) == 0) && $onlinePlayer->getId() == $entityId) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	static function addlastDamageCausedServerTick(Player $player, int $serverTick): void
 	{
 		$playerPositionInArray = self::playerXuidExistsInArray($player, self::$damageCausedByEntityServerTick);

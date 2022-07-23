@@ -5,11 +5,13 @@ namespace Devs\Event;
 use Devs\SpyOne;
 use Devs\Utils\BlockUtil;
 use Devs\Utils\PlayerUtil;
+use pocketmine\data\bedrock\EntityLegacyIds;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJumpEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
+use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 
 class ModuleEventListener implements Listener
 {
@@ -19,11 +21,11 @@ class ModuleEventListener implements Listener
 				$playerIndex = PlayerUtil::playerExistsInArray($player, WatchEventListener::$spyOnePlayerList);
 
 				if($playerIndex == -1) return;
-				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiStep")->check($event, $player);
-				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiSpeed")->check($event, $player);
-				$output = WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiSpeed2")->check($event, $player);
-				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiHighJump")->check($event, $player);
-				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiGlide")->check($event, $player);
+				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiStep")->checkMovement($event, $player);
+				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiSpeed")->checkMovement($event, $player);
+				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiSpeed2")->checkMovement($event, $player);
+				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiHighJump")->checkMovement($event, $player);
+				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiGlide")->checkMovement($event, $player);
 			/*if($output != "")
 			{
 				$player->sendMessage($output);
@@ -32,7 +34,26 @@ class ModuleEventListener implements Listener
 	}
 
 	public function onDamage(EntityDamageByEntityEvent $event) {
-		PlayerUtil::addlastDamageCausedServerTick(PlayerUtil::entityToPlayer($event->getEntity()->getNameTag(), $event->getEntity()->getId()), SpyOne::getInstance()->getServer()->getTick());
+		$damager = $event->getDamager();
+		$target = $event->getEntity();
+
+		if(PlayerUtil::isPlayer($target->getNameTag(), $target->getId())) {
+			$targetToPlayer = PlayerUtil::entityToPlayer($target->getNameTag(), $target->getId());
+			PlayerUtil::addlastDamageCausedServerTick(PlayerUtil::entityToPlayer($target->getNameTag(), $target->getId()), SpyOne::getInstance()->getServer()->getTick());
+
+			if (PlayerUtil::isPlayer($damager->getNameTag(), $damager->getId())) {
+				$damagerToPlayer = PlayerUtil::entityToPlayer($damager->getNameTag(), $damager->getId());
+				$playerIndex = PlayerUtil::playerExistsInArray($damagerToPlayer, WatchEventListener::$spyOnePlayerList);
+
+				if ($playerIndex == -1) return;
+				$output = WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiReach")->checkCombat($event, $damagerToPlayer, $targetToPlayer);
+
+				if($output != "")
+			{
+				$damagerToPlayer->sendMessage($output);
+			}
+			}
+		}
 	}
 
 	public function onJump(PlayerJumpEvent $event) {

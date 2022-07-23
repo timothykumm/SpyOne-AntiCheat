@@ -13,6 +13,7 @@ use Devs\Utils\BlockUtil;
 use Devs\Utils\PlayerUtil;
 use Devs\Utils\TickUtil;
 use pocketmine\block\VanillaBlocks;
+use pocketmine\event\entity\EntityEvent;
 use pocketmine\event\player\PlayerEvent;
 use pocketmine\player\Player;
 
@@ -45,7 +46,12 @@ class AntiSpeed2 extends ModuleBase implements Module
 		$this->counter = new TickUtil(0);
 	}
 
-	public function check(PlayerEvent $event, Player $player): String
+	public function checkCombat(EntityEvent $event, Player $damager, Player $target): string
+	{
+		return "";
+	}
+
+	public function checkMovement(PlayerEvent $event, Player $player): String
 	{
 		if(!$this->isActive()) return "disabled";
 		$this->checkAndFirePunishment($this, $player);

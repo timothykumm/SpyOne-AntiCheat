@@ -8,6 +8,7 @@ use Devs\Punishment\Methods\Message;
 use Devs\Punishment\Punishment;
 use Devs\Utils\PlayerUtil;
 use Devs\Utils\TickUtil;
+use pocketmine\event\entity\EntityEvent;
 use pocketmine\event\player\PlayerEvent;
 use pocketmine\player\Player;
 
@@ -38,7 +39,12 @@ class AntiHighJump extends ModuleBase implements Module
 		$this->counter = new TickUtil(0);
 	}
 
-	public function check(PlayerEvent $event, Player $player): String
+	public function checkCombat(EntityEvent $event, Player $damager, Player $target): string
+	{
+		return "";
+	}
+
+	public function checkMovement(PlayerEvent $event, Player $player): String
 	{
 		if (!$this->isActive()) return "";
 		$this->checkAndFirePunishment($this, $player);
@@ -66,6 +72,5 @@ class AntiHighJump extends ModuleBase implements Module
 
 		return "DistanceY " . $distance;
 	}
-
 
 }

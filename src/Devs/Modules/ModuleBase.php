@@ -2,6 +2,7 @@
 
 namespace Devs\Modules;
 
+use Devs\Modules\Combat\AntiReach;
 use Devs\Modules\Movement\AntiGlide;
 use Devs\Modules\Movement\AntiHighJump;
 use Devs\Modules\Movement\AntiSpeed;
@@ -22,7 +23,8 @@ class ModuleBase
 			"AntiSpeed2" => new AntiSpeed2(),
 			"AntiHighJump" => new AntiHighJump(),
 			"AntiStep" => new AntiStep(),
-			"AntiGlide" => new AntiGlide()
+			"AntiGlide" => new AntiGlide(),
+			"AntiReach" => new AntiReach()
 		);
 
 		if($setup) $this->setupModules();
