@@ -26,12 +26,12 @@ class BlockUtil
 		return $world->getBlockAt($vector1[0], $vector1[1]+2, $vector1[2]);
 	}
 
-	static function inCobweb(array $vector1, World $world): bool
+	static function blockAroundBlock(array $vector1, World $world, int $searchRadiusX, int $searchRadiusY, int $searchRadiusZ, Block $block): bool
 	{
-		for($x=$vector1[0]-2; $x < $vector1[0]+2; $x++) {
-			for($y=$vector1[1]-2; $y < $vector1[1]+2; $y++) {
-				for($z=$vector1[2]-2; $z < $vector1[2]+2; $z++) {
-					if($world->getBlockAt($x, $y, $z)->isSameType(VanillaBlocks::COBWEB())) {
+		for($x=$vector1[0]-$searchRadiusX; $x < $vector1[0]+$searchRadiusX; $x++) {
+			for($y=$vector1[1]-$searchRadiusY; $y < $vector1[1]+$searchRadiusY; $y++) {
+				for($z=$vector1[2]-$searchRadiusZ; $z < $vector1[2]+$searchRadiusZ; $z++) {
+					if($world->getBlockAt($x, $y, $z)->isSameType($block)) {
 						return true;
 					}
 				}
@@ -40,11 +40,11 @@ class BlockUtil
 		return false;
 	}
 
-	static function onStairs(array $vector1, World $world): bool
+	static function blockAroundString(array $vector1, World $world, int $searchRadiusX, int $searchRadiusY, int $searchRadiusZ, String $block): bool
 	{
-		for($x=$vector1[0]-2; $x < $vector1[0]+2; $x++) {
-			for($y=$vector1[1]-1; $y < $vector1[1]+1; $y++) {
-				for($z=$vector1[2]-2; $z < $vector1[2]+2; $z++) {
+		for($x=$vector1[0]-$searchRadiusX; $x < $vector1[0]+$searchRadiusX; $x++) {
+			for($y=$vector1[1]-$searchRadiusY; $y < $vector1[1]+$searchRadiusY; $y++) {
+				for($z=$vector1[2]-$searchRadiusZ; $z < $vector1[2]+$searchRadiusZ; $z++) {
 					if(str_ends_with($world->getBlockAt($x, $y, $z)->getName(), "Stairs")) {
 						return true;
 					}

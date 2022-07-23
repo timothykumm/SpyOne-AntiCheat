@@ -9,6 +9,7 @@ use Devs\Punishment\Punishment;
 use Devs\Utils\BlockUtil;
 use Devs\Utils\PlayerUtil;
 use Devs\Utils\TickUtil;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\event\player\PlayerEvent;
 use pocketmine\player\Player;
 
@@ -64,10 +65,11 @@ class AntiGlide extends ModuleBase implements Module
 		$sum = $this->fallDistance - $this->previousFallDistance;
 		if ($sum <= $this->deviation && $sum >= -$this->deviation && $this->to != 0.0) {
 
-			if(BlockUtil::inCobweb(PlayerUtil::getPosition($player), $player->getWorld())) {
+			if(BlockUtil::blockAroundBlock(PlayerUtil::getPosition($player), $player->getWorld(), 2, 2, 2, VanillaBlocks::COBWEB())
+				|| BlockUtil::blockAroundBlock(PlayerUtil::getPosition($player), $player->getWorld(), 1, 1, 1 ,VanillaBlocks::LADDER())) {
 			$this->resetTicks();
 			$this->resetDistances();
-			return "In Cobweb";
+			return "In Cobweb or on ladder";
 			}
 
 			$this->glideCounter->increaseTick(1);

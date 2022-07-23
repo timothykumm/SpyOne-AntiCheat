@@ -3,10 +3,6 @@
 namespace Devs\Utils;
 
 use Devs\SpyOne;
-use pocketmine\block\Stair;
-use pocketmine\block\Thin;
-use pocketmine\block\VanillaBlocks;
-use pocketmine\block\WoodenStairs;
 use pocketmine\player\Player;
 
 class PlayerUtil
@@ -36,7 +32,7 @@ class PlayerUtil
 
 	static function movementSpeedInfluenced(Player $player): bool
 	{
-		return ($player->isFlying() || $player->isCreative() || $player->isGliding() || $player->isInsideOfSolid() || $player->getMovementSpeed() > 0.13 || (SpyOne::getInstance()->getServer()->getTick() - self::getlastDamageCausedServerTick($player)) < 30 && BlockUtil::onStairs($player));
+		return ($player->isFlying() || $player->isCreative() || $player->isGliding() || $player->isInsideOfSolid() || $player->getMovementSpeed() > 0.13 || (SpyOne::getInstance()->getServer()->getTick() - self::getlastDamageCausedServerTick($player)) < 30 && BlockUtil::blockAroundString(PlayerUtil::getPosition($player),  $player->getWorld(), 1, 1, 1, "Stairs"));
 	}
 
 	static function flyingInfluenced(Player $player): bool
@@ -51,7 +47,7 @@ class PlayerUtil
 
 	static function stepsInfluenced(Player $player): bool
 	{
-		return ($player->isFlying() || $player->isCreative() || $player->isGliding() || BlockUtil::onStairs(PlayerUtil::getPosition($player), $player->getWorld()));
+		return ($player->isFlying() || $player->isCreative() || $player->isGliding() || BlockUtil::blockAroundString(PlayerUtil::getPosition($player),  $player->getWorld(), 1, 1, 1, "Stairs"));
 	}
 
 	static function isJumping(Player $player): bool
