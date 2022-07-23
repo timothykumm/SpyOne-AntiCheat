@@ -1,0 +1,34 @@
+<?php
+
+namespace Devs\Event;
+
+use Devs\Modules\ModuleBase;
+use Devs\SpyOne;
+use Devs\Utils\PlayerUtil;
+use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerQuitEvent;
+
+class WatchEventListener implements Listener
+{
+
+	static array $spyOnePlayerList = array();
+	static array $spyOnePlayerModuleList = array();
+	public ModuleBase $moduleBase;
+
+	public function onJoin(PlayerJoinEvent $event) {
+
+		$this->moduleBase = new ModuleBase();
+		$this->moduleBase->loadModules(true);
+
+		self::$spyOnePlayerList += [$event->getPlayer()->getXuid() => $event->getPlayer()];
+		self::$spyOnePlayerModuleList[] = $this->moduleBase;
+		$event->getPlayer()->sendMessage(SpyOne::PREFIX . "SpyOne is watching you!");
+	}
+
+	public function onLeave(PlayerQuitEvent $event) {
+		unset(self::$spyOnePlayerList[$event->getPlayer()->getXuid()]);
+		unset(self::$spyOnePlayerModuleList[PlayerUtil::playerExistsInArray($event->getPlayer(), self::$spyOnePlayerList)]);
+	}
+
+}
