@@ -7,15 +7,25 @@ use Devs\Utils\BlockUtil;
 use Devs\Utils\PlayerUtil;
 use pocketmine\data\bedrock\EntityLegacyIds;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\entity\EntityEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerEntityInteractEvent;
+use pocketmine\event\player\PlayerItemUseEvent;
 use pocketmine\event\player\PlayerJumpEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
+use pocketmine\event\server\DataPacketReceiveEvent;
+use pocketmine\event\server\DataPacketSendEvent;
+use pocketmine\network\mcpe\protocol\ActorEventPacket;
+use pocketmine\network\mcpe\protocol\AnimatePacket;
+use pocketmine\network\mcpe\protocol\EventPacket;
+use pocketmine\network\mcpe\protocol\LevelEventPacket;
 use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 
 class ModuleEventListener implements Listener
 {
+
+	public int $average = 2, $count = 1;
 
 	public function onMovement(PlayerMoveEvent $event) {
 				$player = $event->getPlayer();
@@ -37,6 +47,7 @@ class ModuleEventListener implements Listener
 	public function onDamage(EntityDamageByEntityEvent $event) {
 		$damager = $event->getDamager();
 		$target = $event->getEntity();
+		$actualCooldown = $event->getAttackCooldown();
 
 		if(PlayerUtil::isPlayer($target->getNameTag(), $target->getId())) {
 			$targetToPlayer = PlayerUtil::entityToPlayer($target->getNameTag(), $target->getId());
@@ -48,30 +59,25 @@ class ModuleEventListener implements Listener
 
 				if ($playerIndex == -1) return;
 
-				$output = WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiKillaura")->checkCombat($event, $damagerToPlayer, $targetToPlayer);
+				$event->setAttackCooldown(0);
 
-				if($output != "")
-				{
-					$damagerToPlayer->sendMessage($output);
+				$cooldown = SpyOne::getInstance()->getServer()->getTick() - PlayerUtil::getlastDamageCausedByPlayerServerTick($damagerToPlayer);
+				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiReach")->checkCombat($event, $damagerToPlayer, $targetToPlayer);
+
+				if($cooldown < $actualCooldown) {
+					$event->cancel();
+				} else{
+					PlayerUtil::addlastDamageCausedByPlayerServerTick($damagerToPlayer, SpyOne::getInstance()->getServer()->getTick());
 				}
-
-				//$output = WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiNoKnockback")->checkCombat($event, $damagerToPlayer, $targetToPlayer);
 
 
 			}
 		}
 	}
 
-	public function onPlayerHit(PlayerEntityInteractEvent $event) {
-
-		//$event->getPlayer()->sendMessage($event->getClickPosition()->cross($event->getPlayer()->getPosition()->asVector3()));
-
-	}
-
 	public function onJump(PlayerJumpEvent $event) {
 		PlayerUtil::addlastJumpServerTick(PlayerUtil::entityToPlayer($event->getPlayer()->getNameTag(), $event->getPlayer()->getId()), SpyOne::getInstance()->getServer()->getTick());
 		PlayerUtil::addlastJumpPosition($event->getPlayer(), array(PlayerUtil::getX($event->getPlayer()), PlayerUtil::getY($event->getPlayer()), PlayerUtil::getZ($event->getPlayer())));
-
 	}
 
 	public function onDeath(PlayerRespawnEvent $event) {

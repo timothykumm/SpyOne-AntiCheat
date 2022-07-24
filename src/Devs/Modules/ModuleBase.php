@@ -26,7 +26,7 @@ class ModuleBase
 			"AntiHighJump" => new AntiHighJump(),
 			"AntiStep" => new AntiStep(),
 			"AntiGlide" => new AntiGlide(),
-			"AntiKillaura" => new AntiKillaura(),
+			"AntiReach" => new AntiReach(),
 			"AntiNoKnockback" => new AntiNoKnockback()
 		);
 

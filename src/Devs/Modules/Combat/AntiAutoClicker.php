@@ -6,21 +6,22 @@ use Devs\Modules\ModuleBase;
 use Devs\Modules\Module;
 use Devs\Punishment\Methods\Message;
 use Devs\Punishment\Punishment;
-use Devs\Utils\BlockUtil;
-use Devs\Utils\PlayerUtil;
+use Devs\SpyOne;
+use Devs\Utils\TickUtil;
 use pocketmine\event\entity\EntityEvent;
 use pocketmine\event\player\PlayerEvent;
 use pocketmine\player\Player;
 
-class AntiKillaura extends ModuleBase implements Module
+class AntiAutoClicker extends ModuleBase implements Module
 {
 
-	private array $damagerPos = array(), $targetPos = array();
-	private float $distance = 0.0, $distanceAllowed = 4.1;
+	private TickUtil $hitCount;
+	private float $cps = 0.0;
+	private int $startTick = 0;
 
 	public function getName() : String
 	{
-		return "AntiKillaura";
+		return "AntiAutoklicker";
 	}
 
 	public function warningLimit(): int
@@ -30,12 +31,12 @@ class AntiKillaura extends ModuleBase implements Module
 
 	public function punishment(): Punishment
 	{
-		return new Message("Killaura detected");
+		return new Message("Autoklicker detected");
 	}
 
 	public function setup(): void
 	{
-
+		$this->hitCount = new TickUtil(0);
 	}
 
 	public function checkCombat(EntityEvent $event, Player $damager, Player $target): string
@@ -43,14 +44,16 @@ class AntiKillaura extends ModuleBase implements Module
 		if(!$this->isActive()) return "";
 		$this->checkAndFirePunishment($this, $damager);
 
-		$this->damagerPos = PlayerUtil::getPosition($damager);
-		$this->targetPos = PlayerUtil::getPosition($target);
-		$this->distance = BlockUtil::calculateDistance($this->damagerPos, $this->targetPos);
+		$this->hitCount->increaseTick(1);
 
-		if($this->distance > $this->distanceAllowed) {
-			$this->addWarning(1, $damager);
-			return "Hit too far " . $this->distance;
+		if($this->hitCount->reachedTick(1)) {
+			$this->startTick = SpyOne::getInstance()->getServer()->getTick();
+		} else if($this->hitCount->reachedTick(10)){
+			$this->cps = ((SpyOne::getInstance()->getServer()->getTick() - $this->startTick) / 20) * 5;
+			$this->hitCount->resetTick();
+			return "Cps: " . $this->cps;
 		}
+
 		return "";
 	}
 
