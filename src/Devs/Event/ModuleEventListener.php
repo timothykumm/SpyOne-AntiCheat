@@ -41,6 +41,7 @@ class ModuleEventListener implements Listener
 				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiSpeed2")->checkMovement($event, $player);
 				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiHighJump")->checkMovement($event, $player);
 				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiGlide")->checkMovement($event, $player);
+				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiNoKnockback")->checkMovement($event, $player);
 	}
 
 	public function onDamage(EntityDamageByEntityEvent $event) {
@@ -65,9 +66,15 @@ class ModuleEventListener implements Listener
 				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiKillaura")->checkCombat($event, $damagerToPlayer, $targetToPlayer);
 				//WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiAutoClicker")->checkCombat($event, $damagerToPlayer, $targetToPlayer);
 
-				//$output != "" ?? $damagerToPlayer->sendMessage($output);
 
-				$modifiedCooldown < $actualCooldown ? $event->cancel() : PlayerUtil::addlastDamageCausedByPlayerServerTick($damagerToPlayer, SpyOne::getInstance()->getServer()->getTick());
+
+				if($modifiedCooldown < $actualCooldown) {
+					$event->cancel();
+				} else{
+					PlayerUtil::addlastDamageCausedByPlayerServerTick($damagerToPlayer, SpyOne::getInstance()->getServer()->getTick());
+					$output = WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiNoKnockback")->checkCombat($event, $damagerToPlayer, $targetToPlayer);
+					//$output != "" ?? $damagerToPlayer->sendMessage($output);
+				}
 
 			}
 		}

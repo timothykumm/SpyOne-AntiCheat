@@ -60,7 +60,7 @@ class AntiStep extends ModuleBase implements Module
 		$this->to = PlayerUtil::getY($player);
 		$this->counter->resetTick();
 		if(($this->to - $this->from) >= $this->maxStep) {
-			if($player->isOnGround() && (PlayerUtil::getServerTick() - PlayerUtil::getlastDamageCausedByEntityServerTick($player)) > 5) {
+			if($player->isOnGround() && !PlayerUtil::recentlyHurt($player)) {
 				if(!PlayerUtil::stepsInfluenced($player)) {
 					$this->addWarning(1, $player);
 					$this->checkAndFirePunishment($this, $player);

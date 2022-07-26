@@ -67,7 +67,7 @@ class AntiSpeed2 extends ModuleBase implements Module
 
 				if($this->distance > $this->jumpTickDifference * $this->distancePerTickAllowed) {
 
-					if(PlayerUtil::movementSpeedInfluenced($player) || !BlockUtil::blockAbove($this->to, $player->getWorld())->isSameType(VanillaBlocks::AIR()))  return "Movement speed influenced";
+					if(PlayerUtil::movementSpeedInfluenced($player) || !BlockUtil::blockAbove($this->to, $player->getWorld())->isSameType(VanillaBlocks::AIR()) || PlayerUtil::recentlyHurt($player)) return "Movement speed influenced";
 
 					$this->addWarning(5, $player);
 					$this->counter->resetTick();

@@ -3,6 +3,7 @@
 namespace Devs\Utils;
 
 use Devs\SpyOne;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\network\mcpe\protocol\types\DeviceOS;
 use pocketmine\player\Player;
 
@@ -11,11 +12,15 @@ class PlayerUtil
 
 	private static array $damageCausedByEntityServerTick = array(), $damageCausedByPlayerServerTick = array(), $jumpServerTick = array(), $deathServerTick = array(), $respawnServerTick = array(), $jumpPosition = array();
 
-	static function getOS(Player $player) : int{
+	static function getOS(Player $player) : int {
 		return $player->getNetworkSession()->getPlayerInfo()->getExtraData()["DeviceOS"];
 	}
 
-	static function hasCrosshair(Player $player) : int{
+	static function getPing(Player $player) : int {
+		return $player->getNetworkSession()->getPing() != null ? $player->getNetworkSession()->getPing() : 0;
+	}
+
+	static function hasCrosshair(Player $player) : int {
 		return self::getOS($player) == DeviceOS::NINTENDO || self::getOS($player) == DeviceOS::OSX ||
 			self::getOS($player) == DeviceOS::PLAYSTATION || self::getOS($player) == DeviceOS::TVOS ||
 			self::getOS($player) == DeviceOS::WIN32 || self::getOS($player) == DeviceOS::WINDOWS_10 ||
@@ -65,6 +70,14 @@ class PlayerUtil
 	static function stepsInfluenced(Player $player): bool
 	{
 		return ($player->isFlying() || $player->isCreative() || $player->isGliding() || BlockUtil::blockAroundString(PlayerUtil::getPosition($player),  $player->getWorld(), 1, 1, 1, "Stairs"));
+	}
+
+	static function knockbackInfluenced(Player $player): bool
+	{
+		return ($player->isFlying() || $player->isCreative() || $player->isGliding() || $player->isInsideOfSolid() ||
+			BlockUtil::blockAroundBlock(PlayerUtil::getPosition($player), $player->getWorld(), 2, 2, 2, VanillaBlocks::COBWEB())
+			|| BlockUtil::blockAroundBlock(PlayerUtil::getPosition($player), $player->getWorld(), 1, 1, 1 ,VanillaBlocks::LADDER())
+				|| $player->isUnderwater() || BlockUtil::blockUnder(self::getPosition($player), $player->getWorld())->isSameType(VanillaBlocks::WATER()));
 	}
 
 	static function isJumping(Player $player): bool
@@ -172,6 +185,12 @@ class PlayerUtil
 	static function recentlyDied(Player $player): bool
 	{
 		$serverTick =  ClientUtil::getValueOfArray(self::$deathServerTick, $player->getXuid()) != null ? ClientUtil::getValueOfArray(self::$deathServerTick, $player->getXuid()) : 0;
+		return (SpyOne::getInstance()->getServer()->getTick() - $serverTick) < 30;
+	}
+
+	static function recentlyHurt(Player $player): bool
+	{
+		$serverTick =  ClientUtil::getValueOfArray(self::$damageCausedByEntityServerTick, $player->getXuid()) != null ? ClientUtil::getValueOfArray(self::$damageCausedByEntityServerTick, $player->getXuid()) : 0;
 		return (SpyOne::getInstance()->getServer()->getTick() - $serverTick) < 30;
 	}
 

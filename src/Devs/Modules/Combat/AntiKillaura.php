@@ -16,9 +16,7 @@ use pocketmine\player\Player;
 
 class AntiKillaura extends ModuleBase implements Module
 {
-
-	private TickUtil $hitCounter, $resetCounter;
-	private float $distanceAlowed = 0.2;
+	private float $distanceAlowed = 0.23;
 
 	public function getName() : String
 	{
@@ -37,8 +35,7 @@ class AntiKillaura extends ModuleBase implements Module
 
 	public function setup(): void
 	{
-		$this->hitCounter = new TickUtil(0);
-		$this->resetCounter = new TickUtil(0);
+
 	}
 
 	public function checkCombat(EntityEvent $event, Player $damager, Player $target): string
@@ -70,11 +67,6 @@ class AntiKillaura extends ModuleBase implements Module
 	public function checkMovement(PlayerEvent $event, Player $player): String
 	{
 		return "";
-	}
-
-	function resetTicks() : void{
-		$this->hitCounter->resetTick();
-		$this->resetCounter->resetTick();
 	}
 
 }

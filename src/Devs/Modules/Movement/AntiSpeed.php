@@ -21,10 +21,10 @@ class AntiSpeed extends ModuleBase implements Module
 {
 
 	private TickUtil $counter;
-	private array $from = array(), $from2 = array(), $to= array(), $to2 = array();
-	private float $distanceMoveFlag = 5.0, $distance = -1412.0, $distance2 = -1412.0, $distancePerTick = 0.354;
-	private float $heightFallenFlag = -3.0 , $yDistance = 0.0, $yDistance2 = 0.0;
-	private float $previousDistance = -1141.0, $prePreviousDistance = -311.0, $maxDistance = 0.0;
+	private array $from = array(), $to= array();
+	private float $distance = -1412.0;
+	private float  $yDistance = 0.0;
+	private float $previousDistance = -1141.0, $maxDistance = 0.0;
 	private float $onGroundSpeedFlag = 3.6, $avgOnGroundSpeed = 2.8, $avgOnGroundSpeedReset = 2.8;
 	private int $jumpTickDifference = 0;
 
@@ -67,7 +67,7 @@ class AntiSpeed extends ModuleBase implements Module
 			$this->yDistance = ($this->to[1] - $this->from[1]);
 			$this->distance = BlockUtil::calculateDistance($this->from, $this->to);
 
-			if(PlayerUtil::movementSpeedInfluenced($player) || !BlockUtil::blockAbove($this->to, $player->getWorld())->isSameType(VanillaBlocks::AIR())) {
+			if(PlayerUtil::movementSpeedInfluenced($player) || !BlockUtil::blockAbove($this->to, $player->getWorld())->isSameType(VanillaBlocks::AIR()) || PlayerUtil::recentlyHurt($player)) {
 				$this->resetDistances(); //prevents high distance being calculated after movement is not influenced anymore
 				$this->from = array(PlayerUtil::getX($player), PlayerUtil::getY($player), PlayerUtil::getZ($player)); //resets fromDistance else it calculates wrong distance
 				return "Movement speed influenced";
