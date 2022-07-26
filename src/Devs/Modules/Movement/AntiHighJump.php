@@ -47,7 +47,6 @@ class AntiHighJump extends ModuleBase implements Module
 	public function checkMovement(PlayerEvent $event, Player $player): String
 	{
 		if (!$this->isActive()) return "";
-		$this->checkAndFirePunishment($this, $player);
 
 		if(PlayerUtil::jumpHeightInfluenced($player)) {
 			return "Jump height influenced";
@@ -67,6 +66,7 @@ class AntiHighJump extends ModuleBase implements Module
 		if($distance > $this->maxDistanceY) {
 			if(!$player->isOnGround() && (PlayerUtil::getServerTick() - PlayerUtil::getlastDamageCausedByEntityServerTick($player)) > 5)
 			$this->addWarning(1, $player);
+			$this->checkAndFirePunishment($this, $player);
 			return "Jumped too high";
 		}
 

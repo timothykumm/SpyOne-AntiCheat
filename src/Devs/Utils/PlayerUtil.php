@@ -3,12 +3,24 @@
 namespace Devs\Utils;
 
 use Devs\SpyOne;
+use pocketmine\network\mcpe\protocol\types\DeviceOS;
 use pocketmine\player\Player;
 
 class PlayerUtil
 {
 
 	private static array $damageCausedByEntityServerTick = array(), $damageCausedByPlayerServerTick = array(), $jumpServerTick = array(), $deathServerTick = array(), $respawnServerTick = array(), $jumpPosition = array();
+
+	static function getOS(Player $player) : int{
+		return $player->getNetworkSession()->getPlayerInfo()->getExtraData()["DeviceOS"];
+	}
+
+	static function hasCrosshair(Player $player) : int{
+		return self::getOS($player) == DeviceOS::NINTENDO || self::getOS($player) == DeviceOS::OSX ||
+			self::getOS($player) == DeviceOS::PLAYSTATION || self::getOS($player) == DeviceOS::TVOS ||
+			self::getOS($player) == DeviceOS::WIN32 || self::getOS($player) == DeviceOS::WINDOWS_10 ||
+			self::getOS($player) == DeviceOS::XBOX;
+	}
 
 	static function getPosition(Player $player): array
 	{
@@ -38,6 +50,11 @@ class PlayerUtil
 	static function flyingInfluenced(Player $player): bool
 	{
 		return ($player->isFlying() || $player->isCreative() || $player->isGliding());
+	}
+
+	static function combatInfluenced(Player $player): bool
+	{
+		return ($player->isCreative());
 	}
 
 	static function jumpHeightInfluenced(Player $player): bool
@@ -83,66 +100,37 @@ class PlayerUtil
 	static function addlastDamageCausedByEntityServerTick(Player $player, int $serverTick): void
 	{
 		$playerPositionInArray = self::playerXuidExistsInArray($player, self::$damageCausedByEntityServerTick);
-		if($playerPositionInArray != -1) {
-			self::$damageCausedByEntityServerTick[$player->getXuid()] = $serverTick;
-			return;
-		}
-
-		self::$damageCausedByEntityServerTick += [$player->getXuid() => $serverTick];
+		$playerPositionInArray != -1 ? self::$damageCausedByEntityServerTick[$player->getXuid()] = $serverTick : self::$damageCausedByEntityServerTick += [$player->getXuid() => $serverTick];
 	}
 
 	static function addlastDamageCausedByPlayerServerTick(Player $player, int $serverTick): void
 	{
 		$playerPositionInArray = self::playerXuidExistsInArray($player, self::$damageCausedByPlayerServerTick);
-		if($playerPositionInArray != -1) {
-			self::$damageCausedByPlayerServerTick[$player->getXuid()] = $serverTick;
-			return;
-		}
-
-		self::$damageCausedByPlayerServerTick += [$player->getXuid() => $serverTick];
+		$playerPositionInArray != -1 ? self::$damageCausedByPlayerServerTick[$player->getXuid()] = $serverTick : self::$damageCausedByPlayerServerTick += [$player->getXuid() => $serverTick];
 	}
 
 	static function addlastJumpServerTick(Player $player, int $serverTick): void
 	{
 		$playerPositionInArray = self::playerXuidExistsInArray($player, self::$jumpServerTick);
-		if($playerPositionInArray != -1) {
-			self::$jumpServerTick[$player->getXuid()] = $serverTick;
-			return;
-		}
-
-		self::$jumpServerTick += [$player->getXuid() => $serverTick];
+		$playerPositionInArray != -1 ? self::$jumpServerTick[$player->getXuid()] = $serverTick : self::$jumpServerTick += [$player->getXuid() => $serverTick];
 	}
 
 	static function addlastDeathServerTick(Player $player, int $serverTick): void
 	{
 		$playerPositionInArray = self::playerXuidExistsInArray($player, self::$deathServerTick);
-		if($playerPositionInArray != -1) {
-			self::$deathServerTick[$player->getXuid()] = $serverTick;
-			return;
-		}
-
-		self::$deathServerTick += [$player->getXuid() => $serverTick];
+		$playerPositionInArray != -1 ? self::$deathServerTick[$player->getXuid()] = $serverTick : self::$deathServerTick += [$player->getXuid() => $serverTick];
 	}
 
 	static function addlastRespawnServerTick(Player $player, int $serverTick): void
 	{
 		$playerPositionInArray = self::playerXuidExistsInArray($player, self::$respawnServerTick);
-		if($playerPositionInArray != -1) {
-			self::$respawnServerTick[$player->getXuid()] = $serverTick;
-			return;
-		}
-
-		self::$respawnServerTick += [$player->getXuid() => $serverTick];
+		$playerPositionInArray != -1 ? self::$respawnServerTick[$player->getXuid()] = $serverTick : self::$respawnServerTick += [$player->getXuid() => $serverTick];
 	}
 
 	static function addlastJumpPosition(Player $player, array $pos): void
 	{
 		$playerPositionInArray = self::playerXuidExistsInArray($player, self::$jumpServerTick);
-		if($playerPositionInArray != -1) {
-			self::$jumpPosition[$playerPositionInArray] = $pos;
-			return;
-		}
-		self::$jumpPosition[] = $pos;
+		$playerPositionInArray != -1 ? self::$jumpPosition[$playerPositionInArray] = $pos : self::$jumpPosition[] = $pos;
 	}
 
 	static function getlastDamageCausedByEntityServerTick(Player $player): int

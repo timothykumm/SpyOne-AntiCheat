@@ -50,7 +50,6 @@ class AntiStep extends ModuleBase implements Module
 	public function checkMovement(PlayerEvent $event, Player $player): String
 	{
 		if(!$this->isActive()) return "";
-		$this->checkAndFirePunishment($this, $player);
 
 		if($this->counter->reachedTick(0)) {
 			$this->from = PlayerUtil::getY($player);
@@ -64,6 +63,7 @@ class AntiStep extends ModuleBase implements Module
 			if($player->isOnGround() && (PlayerUtil::getServerTick() - PlayerUtil::getlastDamageCausedByEntityServerTick($player)) > 5) {
 				if(!PlayerUtil::stepsInfluenced($player)) {
 					$this->addWarning(1, $player);
+					$this->checkAndFirePunishment($this, $player);
 					return "Stepped up too fast";
 				}
 			}

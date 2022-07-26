@@ -54,7 +54,6 @@ class AntiSpeed2 extends ModuleBase implements Module
 	public function checkMovement(PlayerEvent $event, Player $player): String
 	{
 		if(!$this->isActive()) return "disabled";
-		$this->checkAndFirePunishment($this, $player);
 
 		$this->jumpTickDifference = (SpyOne::getInstance()->getServer()->getTick() - PlayerUtil::getlastJumpServerTick($player));
 
@@ -72,7 +71,7 @@ class AntiSpeed2 extends ModuleBase implements Module
 
 					$this->addWarning(5, $player);
 					$this->counter->resetTick();
-
+					$this->checkAndFirePunishment($this, $player);
 					return "Too fast! Distance: " . $this->distance . " DistanceTick: " . $this->distance / $this->jumpTickDifference . " DistanceAllowed: " . $this->jumpTickDifference * $this->distancePerTickAllowed;
 				}
 

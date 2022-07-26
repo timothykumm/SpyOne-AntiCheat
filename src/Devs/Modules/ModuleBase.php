@@ -2,6 +2,7 @@
 
 namespace Devs\Modules;
 
+use Devs\Modules\Combat\AntiAutoClicker;
 use Devs\Modules\Combat\AntiKillaura;
 use Devs\Modules\Combat\AntiNoKnockback;
 use Devs\Modules\Combat\AntiReach;
@@ -27,7 +28,9 @@ class ModuleBase
 			"AntiStep" => new AntiStep(),
 			"AntiGlide" => new AntiGlide(),
 			"AntiReach" => new AntiReach(),
-			"AntiNoKnockback" => new AntiNoKnockback()
+			"AntiNoKnockback" => new AntiNoKnockback(),
+			"AntiKillaura" => new AntiKillaura(),
+			"AntiAutoClicker" => new AntiAutoClicker()
 		);
 
 		if($setup) $this->setupModules();

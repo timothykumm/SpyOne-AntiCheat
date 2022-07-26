@@ -51,7 +51,6 @@ class AntiGlide extends ModuleBase implements Module
 	public function checkMovement(PlayerEvent $event, Player $player): String
 	{
 		if (!$this->isActive()) return "";
-		$this->checkAndFirePunishment($this, $player);
 
 		if ($this->counter->reachedTick(0)) {
 			$this->from = PlayerUtil::getY($player);
@@ -87,6 +86,7 @@ class AntiGlide extends ModuleBase implements Module
 		if($this->glideCounter->reachedTick(3)) {
 			$this->addWarning(1, $player);
 			$this->glideCounter->resetTick();
+			$this->checkAndFirePunishment($this, $player);
 			return "Glided?";
 		}
 

@@ -2,7 +2,6 @@
 
 namespace Devs\Utils;
 
-
 use pocketmine\player\Player;
 
 class ClientUtil

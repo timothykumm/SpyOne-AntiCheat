@@ -16,6 +16,11 @@ class BlockUtil
 		return sqrt(pow($vector1[0] - $vector2[0], 2) + pow(0, 2) + pow($vector1[2] - $vector2[2], 2));
 	}
 
+	static function calculateDistanceWithY(array $vector1, array $vector2): float
+	{
+		return sqrt(pow($vector1[0] - $vector2[0], 2) + pow($vector1[1] - $vector2[1], 2) + pow($vector1[2] - $vector2[2], 2));
+	}
+
 	static function blockUnder(array $vector1, World $world): Block
 	{
 		return $world->getBlockAt($vector1[0], $vector1[1]-1, $vector1[2]);

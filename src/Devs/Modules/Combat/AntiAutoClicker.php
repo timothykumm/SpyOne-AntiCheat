@@ -7,6 +7,7 @@ use Devs\Modules\Module;
 use Devs\Punishment\Methods\Message;
 use Devs\Punishment\Punishment;
 use Devs\SpyOne;
+use Devs\Utils\PlayerUtil;
 use Devs\Utils\TickUtil;
 use pocketmine\event\entity\EntityEvent;
 use pocketmine\event\player\PlayerEvent;
@@ -47,11 +48,12 @@ class AntiAutoClicker extends ModuleBase implements Module
 		$this->hitCount->increaseTick(1);
 
 		if($this->hitCount->reachedTick(1)) {
-			$this->startTick = SpyOne::getInstance()->getServer()->getTick();
+			$this->startTick = PlayerUtil::getServerTick();
 		} else if($this->hitCount->reachedTick(10)){
-			$this->cps = ((SpyOne::getInstance()->getServer()->getTick() - $this->startTick) / 20) * 5;
+			$this->cps = (PlayerUtil::getServerTick() - $this->startTick);
 			$this->hitCount->resetTick();
-			return "Cps: " . $this->cps;
+			$damager->sendMessage($this->cps);
+			return $this->cps;
 		}
 
 		return "";

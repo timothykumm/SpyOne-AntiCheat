@@ -19,7 +19,6 @@ class SpyOne extends PluginBase
 		$this->getServer()->getPluginManager()->registerEvents(new ModuleEventListener(), $this);
 		$this->getServer()->getPluginManager()->registerEvents(new WatchEventListener(), $this);
 		//$this->getScheduler()->scheduleRepeatingTask(new PunishTask(), 20);
-
 	}
 
 	public static function getInstance(): self {

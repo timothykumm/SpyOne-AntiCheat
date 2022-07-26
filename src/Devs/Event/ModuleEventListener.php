@@ -4,9 +4,12 @@ namespace Devs\Event;
 
 use Devs\SpyOne;
 use Devs\Utils\BlockUtil;
+use Devs\Utils\ClientUtil;
 use Devs\Utils\PlayerUtil;
 use pocketmine\data\bedrock\EntityLegacyIds;
+use pocketmine\entity\animation\ArmSwingAnimation;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerEntityInteractEvent;
@@ -16,6 +19,9 @@ use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\event\server\DataPacketSendEvent;
+use pocketmine\math\AxisAlignedBB;
+use pocketmine\math\Math;
+use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\ActorEventPacket;
 use pocketmine\network\mcpe\protocol\AnimatePacket;
 use pocketmine\network\mcpe\protocol\EventPacket;
@@ -24,8 +30,6 @@ use pocketmine\network\mcpe\protocol\types\entity\EntityIds;
 
 class ModuleEventListener implements Listener
 {
-
-	public int $average = 2, $count = 1;
 
 	public function onMovement(PlayerMoveEvent $event) {
 				$player = $event->getPlayer();
@@ -37,11 +41,6 @@ class ModuleEventListener implements Listener
 				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiSpeed2")->checkMovement($event, $player);
 				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiHighJump")->checkMovement($event, $player);
 				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiGlide")->checkMovement($event, $player);
-			/*if($output != "")
-			{
-				$player->sendMessage($output);
-			}*/
-
 	}
 
 	public function onDamage(EntityDamageByEntityEvent $event) {
@@ -60,16 +59,15 @@ class ModuleEventListener implements Listener
 				if ($playerIndex == -1) return;
 
 				$event->setAttackCooldown(0);
+				$modifiedCooldown = PlayerUtil::getServerTick() - PlayerUtil::getlastDamageCausedByPlayerServerTick($damagerToPlayer);
 
-				$cooldown = SpyOne::getInstance()->getServer()->getTick() - PlayerUtil::getlastDamageCausedByPlayerServerTick($damagerToPlayer);
 				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiReach")->checkCombat($event, $damagerToPlayer, $targetToPlayer);
+				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiKillaura")->checkCombat($event, $damagerToPlayer, $targetToPlayer);
+				//WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiAutoClicker")->checkCombat($event, $damagerToPlayer, $targetToPlayer);
 
-				if($cooldown < $actualCooldown) {
-					$event->cancel();
-				} else{
-					PlayerUtil::addlastDamageCausedByPlayerServerTick($damagerToPlayer, SpyOne::getInstance()->getServer()->getTick());
-				}
+				//$output != "" ?? $damagerToPlayer->sendMessage($output);
 
+				$modifiedCooldown < $actualCooldown ? $event->cancel() : PlayerUtil::addlastDamageCausedByPlayerServerTick($damagerToPlayer, SpyOne::getInstance()->getServer()->getTick());
 
 			}
 		}

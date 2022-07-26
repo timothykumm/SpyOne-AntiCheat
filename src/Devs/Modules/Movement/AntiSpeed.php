@@ -56,7 +56,6 @@ class AntiSpeed extends ModuleBase implements Module
 	public function checkMovement(PlayerEvent $event, Player $player): String
 	{
 		if(!$this->isActive()) return "disabled";
-		$this->checkAndFirePunishment($this, $player);
 
 		$this->jumpTickDifference = (SpyOne::getInstance()->getServer()->getTick() - PlayerUtil::getlastJumpServerTick($player));
 
@@ -79,6 +78,7 @@ class AntiSpeed extends ModuleBase implements Module
 				$this->onGroundReset();
 				$this->addWarning(5, $player);
 				//$this->counter->resetTick();
+				$this->checkAndFirePunishment($this, $player);
 				return $this->getWarning() . " Warnings, OnGround Speed detected. Avg: " . $bin;
 			} else if ($this->avgOnGroundSpeed < $this->onGroundSpeedFlag && $this->jumpTickDifference < 20) {
 				$this->onGroundReset();
