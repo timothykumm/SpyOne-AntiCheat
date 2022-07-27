@@ -22,9 +22,7 @@ class AntiSpeed extends ModuleBase implements Module
 
 	private TickUtil $counter;
 	private array $from = array(), $to= array();
-	private float $distance = -1412.0;
-	private float  $yDistance = 0.0;
-	private float $previousDistance = -1141.0, $maxDistance = 0.0;
+	private float $distance = -1412.0, $yDistance = 0.0, $maxDistance = 0.0;
 	private float $onGroundSpeedFlag = 3.6, $avgOnGroundSpeed = 2.8, $avgOnGroundSpeedReset = 2.8;
 	private int $jumpTickDifference = 0;
 
@@ -57,7 +55,7 @@ class AntiSpeed extends ModuleBase implements Module
 	{
 		if(!$this->isActive()) return "disabled";
 
-		$this->jumpTickDifference = (SpyOne::getInstance()->getServer()->getTick() - PlayerUtil::getlastJumpServerTick($player));
+		$this->jumpTickDifference = (PlayerUtil::getServerTick() - PlayerUtil::getlastJumpServerTick($player));
 
 		if ($this->counter->reachedTick(10)) {
 			$this->from = array(PlayerUtil::getX($player), PlayerUtil::getY($player), PlayerUtil::getZ($player));
@@ -68,7 +66,6 @@ class AntiSpeed extends ModuleBase implements Module
 			$this->distance = BlockUtil::calculateDistance($this->from, $this->to);
 
 			if(PlayerUtil::movementSpeedInfluenced($player) || !BlockUtil::blockAbove($this->to, $player->getWorld())->isSameType(VanillaBlocks::AIR()) || PlayerUtil::recentlyHurt($player)) {
-				$this->resetDistances(); //prevents high distance being calculated after movement is not influenced anymore
 				$this->from = array(PlayerUtil::getX($player), PlayerUtil::getY($player), PlayerUtil::getZ($player)); //resets fromDistance else it calculates wrong distance
 				return "Movement speed influenced";
 			}
@@ -89,7 +86,6 @@ class AntiSpeed extends ModuleBase implements Module
 			}
 			//end
 
-			$this->setDistances();
 			$this->counter->resetTick();
 			//return "Distance: ". $this->distance . " Player Ping: " . $player->getNetworkSession()->getPing() . " YDistance: " . $this->yDistance . " MovementSpeed: " . $player->getMovementSpeed();
 			//$event->uncancel();
@@ -98,16 +94,6 @@ class AntiSpeed extends ModuleBase implements Module
 		}
 		$this->counter->increaseTick(1);
 		return "";
-	}
-
-	public function setDistances() : void {
-		$this->prePreviousDistance = $this->previousDistance;
-		$this->previousDistance = $this->distance;
-	}
-
-	public function resetDistances() : void {
-		$this->prePreviousDistance = $this->previousDistance;
-		$this->previousDistance = -1412.0;
 	}
 
 	public function onGroundReset() : void {

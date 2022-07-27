@@ -6,17 +6,14 @@ use Devs\Modules\ModuleBase;
 use Devs\Modules\Module;
 use Devs\Punishment\Methods\Message;
 use Devs\Punishment\Punishment;
-use Devs\Utils\BlockUtil;
 use Devs\Utils\PlayerUtil;
-use Devs\Utils\TickUtil;
 use pocketmine\event\entity\EntityEvent;
 use pocketmine\event\player\PlayerEvent;
-use pocketmine\math\AxisAlignedBB;
 use pocketmine\player\Player;
 
 class AntiKillaura extends ModuleBase implements Module
 {
-	private float $distanceAlowed = 0.23;
+	private float $lengthAlowedCrosshair = 1.2, $lengthAlowedNoCrosshair = 3.3;
 
 	public function getName() : String
 	{
@@ -41,22 +38,31 @@ class AntiKillaura extends ModuleBase implements Module
 	public function checkCombat(EntityEvent $event, Player $damager, Player $target): string
 	{
 		if(!$this->isActive() || PlayerUtil::combatInfluenced($damager)) return "";
-		if(!PlayerUtil::hasCrosshair($damager)) return "No crosshair";
 
-		$distancePos = BlockUtil::calculateDistanceWithY(PlayerUtil::getPosition($damager), PlayerUtil::getPosition($target));
-		$distanceSight = BlockUtil::calculateDistanceWithY(array(
-			PlayerUtil::getX($damager) - $damager->getDirectionVector()->getX(),
-				PlayerUtil::getY($damager) - $damager->getDirectionVector()->getY(),
-				PlayerUtil::getZ($damager) - $damager->getDirectionVector()->getZ()),
-				PlayerUtil::getPosition($target)) -1;
+		$posFoot = $damager->getPosition()->asVector3();
+		$posHead = $damager->getEyePos()->asVector3();
 
-		if(($distancePos-$distanceSight) > $this->distanceAlowed) {
-			if (!$damager->getBoundingBox()->intersectsWith(new AxisAlignedBB(PlayerUtil::getX($target) - 0.5, PlayerUtil::getY($target), PlayerUtil::getZ($target) - 0.5,
-				PlayerUtil::getX($target) + 0.5, PlayerUtil::getY($target), PlayerUtil::getZ($target) + 0.5))) {
-				$this->addWarning(2, $damager);
+		$dirLooking = $damager->getDirectionVector()->normalize();
+		$targetPos = $target->getPosition()->asVector3();
+
+		$directionFoot = $posFoot->subtractVector($targetPos);
+		$directionHead = $posHead->subtractVector($targetPos);
+
+		$crossPosFoot = $directionFoot->cross($dirLooking);
+		$crossPosHead = $directionHead->cross($dirLooking);
+
+		$crossLengthFoot = $crossPosFoot->length();
+		$crossLengthHead = $crossPosHead->length();
+
+		if($crossLengthFoot > $this->lengthAlowedCrosshair && $crossLengthHead > $this->lengthAlowedCrosshair) {
+			if(PlayerUtil::hasCrosshair($damager)) {
+				$this->addWarning(3, $damager);
 				$this->checkAndFirePunishment($this, $damager);
-				//$damager->sendMessage($distancePos - $distanceSight);
-				return "Killaura?";
+				return "Killaura crosshair?";
+			}else if($crossLengthFoot > $this->lengthAlowedNoCrosshair && $crossLengthHead > $this->lengthAlowedNoCrosshair){
+				$this->addWarning(5, $damager);
+				$this->checkAndFirePunishment($this, $damager);
+				return "Killaura no crosshair?";
 			}
 		}
 

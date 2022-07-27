@@ -6,7 +6,6 @@ use Devs\Modules\ModuleBase;
 use Devs\Modules\Module;
 use Devs\Punishment\Methods\Message;
 use Devs\Punishment\Punishment;
-use Devs\SpyOne;
 use Devs\Utils\PlayerUtil;
 use Devs\Utils\TickUtil;
 use pocketmine\event\entity\EntityEvent;

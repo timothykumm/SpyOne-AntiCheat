@@ -2,10 +2,7 @@
 
 namespace Devs\Utils;
 
-use Devs\SpyOne;
 use pocketmine\block\Block;
-use pocketmine\block\VanillaBlocks;
-use pocketmine\player\Player;
 use pocketmine\world\World;
 
 class BlockUtil

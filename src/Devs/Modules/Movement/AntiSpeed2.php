@@ -22,8 +22,7 @@ class AntiSpeed2 extends ModuleBase implements Module
 
 	private TickUtil $counter;
 	private array $from = array(), $to= array();
-	private float $distance = -1412.0, $distancePerTickAllowed = 0.39, $maxDistance = 0.0;
-	private float $yDistance = 0.0;
+	private float $distance = -1412.0, $distancePerTickAllowed = 0.39;
 	private int $jumpTickDifference = 0;
 
 	public function getName() : String
@@ -61,7 +60,6 @@ class AntiSpeed2 extends ModuleBase implements Module
 
 				$this->from = PlayerUtil::getlastJumpPosition($player);
 				$this->to = array(PlayerUtil::getX($player), PlayerUtil::getY($player), PlayerUtil::getZ($player));
-				$this->yDistance = ($this->to[1] - $this->from[1]);
 				$this->distance = BlockUtil::calculateDistance($this->from, $this->to);
 				$this->counter->resetTick();
 

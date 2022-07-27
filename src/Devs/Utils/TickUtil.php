@@ -2,11 +2,6 @@
 
 namespace Devs\Utils;
 
-use Devs\SpyOne;
-use pocketmine\event\Event;
-use pocketmine\event\Listener;
-use pocketmine\player\Player;
-
 class TickUtil
 {
 	private int $tick, $rememberTick;
