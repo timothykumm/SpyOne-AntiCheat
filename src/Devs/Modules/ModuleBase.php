@@ -8,6 +8,7 @@ use Devs\Modules\Combat\AntiNoKnockback;
 use Devs\Modules\Combat\AntiReach;
 use Devs\Modules\Movement\AntiGlide;
 use Devs\Modules\Movement\AntiHighJump;
+use Devs\Modules\Movement\AntiJesus;
 use Devs\Modules\Movement\AntiSpeed;
 use Devs\Modules\Movement\AntiSpeed2;
 use Devs\Modules\Movement\AntiStep;
@@ -30,7 +31,8 @@ class ModuleBase
 			"AntiReach" => new AntiReach(),
 			"AntiNoKnockback" => new AntiNoKnockback(),
 			"AntiKillaura" => new AntiKillaura(),
-			"AntiAutoClicker" => new AntiAutoClicker()
+			"AntiAutoClicker" => new AntiAutoClicker(),
+			"AntiJesus" => new AntiJesus()
 		);
 
 		if($setup) $this->setupModules();

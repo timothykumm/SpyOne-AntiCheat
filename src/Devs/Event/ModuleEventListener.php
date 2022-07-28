@@ -24,6 +24,7 @@ class ModuleEventListener implements Listener
 				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiHighJump")->checkMovement($event, $player);
 				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiGlide")->checkMovement($event, $player);
 				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiNoKnockback")->checkMovement($event, $player);
+				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiJesus")->checkMovement($event, $player);
 	}
 
 	public function onDamage(EntityDamageByEntityEvent $event) {
