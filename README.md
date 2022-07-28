@@ -7,7 +7,7 @@ AntiCheat for Minecraft Bedrock (Pocketmine)
 
 ✅ Speed 
 
-✅ NoKnockback
+✅ NoKnockback 
 
 ✅ Reach
 
@@ -17,6 +17,8 @@ AntiCheat for Minecraft Bedrock (Pocketmine)
 
 ✅ Step
 
-❌ Plugin unfinished and still in Development! ❌
+✅ Jesus
+
+❌ Plugin still in development and probably unstable. 
 
 
