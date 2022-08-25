@@ -9,7 +9,7 @@ use pocketmine\plugin\PluginBase;
 class SpyOne extends PluginBase
 {
 
-	const PREFIX = "§0[§bSpy§fOne§0]§b ";
+	const PREFIX = "§8[§bAnticheat§8]§b ";
 	private static self $instance;
 
 	public function onEnable(): void
