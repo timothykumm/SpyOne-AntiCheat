@@ -17,7 +17,7 @@ class Message implements Punishment
 
 	function fire(Player $player): void
 	{
-		$player->sendMessage(SpyOne::PREFIX . "Warning: " . $this->reason);
+		$player->sendMessage(SpyOne::PREFIX . "§l§b»§r§c Warning:§e " . $this->reason);
 	}
 
 }
