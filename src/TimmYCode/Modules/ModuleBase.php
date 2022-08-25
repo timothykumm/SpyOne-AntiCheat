@@ -6,6 +6,7 @@ use TimmYCode\Modules\Combat\AntiAutoClicker;
 use TimmYCode\Modules\Combat\AntiKillaura;
 use TimmYCode\Modules\Combat\AntiNoKnockback;
 use TimmYCode\Modules\Combat\AntiReach;
+use TimmYCode\Modules\Movement\AntiAirJump;
 use TimmYCode\Modules\Movement\AntiGlide;
 use TimmYCode\Modules\Movement\AntiHighJump;
 use TimmYCode\Modules\Movement\AntiJesus;
@@ -32,7 +33,8 @@ class ModuleBase
 			"AntiNoKnockback" => new AntiNoKnockback(),
 			"AntiKillaura" => new AntiKillaura(),
 			"AntiAutoClicker" => new AntiAutoClicker(),
-			"AntiJesus" => new AntiJesus()
+			"AntiJesus" => new AntiJesus(),
+			"AntiAirJump" => new AntiAirJump()
 		);
 
 		if($setup) $this->setupModules();
