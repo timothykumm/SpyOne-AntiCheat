@@ -2,14 +2,14 @@
 
 namespace TimmYCode\Modules\Movement;
 
+use pocketmine\event\Event;
 use TimmYCode\Modules\ModuleBase;
 use TimmYCode\Modules\Module;
 use TimmYCode\Punishment\Methods\Message;
 use TimmYCode\Punishment\Punishment;
+use TimmYCode\Utils\ClientUtil;
 use TimmYCode\Utils\PlayerUtil;
 use TimmYCode\Utils\TickUtil;
-use pocketmine\event\entity\EntityEvent;
-use pocketmine\event\player\PlayerEvent;
 use pocketmine\player\Player;
 
 class AntiHighJump extends ModuleBase implements Module
@@ -39,12 +39,7 @@ class AntiHighJump extends ModuleBase implements Module
 		$this->counter = new TickUtil(0);
 	}
 
-	public function checkCombat(EntityEvent $event, Player $damager, Player $target): string
-	{
-		return "";
-	}
-
-	public function checkMovement(PlayerEvent $event, Player $player): String
+	public function check(Event $event, Player $player): String
 	{
 		if (!$this->isActive()) return "";
 
@@ -64,7 +59,7 @@ class AntiHighJump extends ModuleBase implements Module
 		$distance = ($this->to - $this->from);
 
 		if($distance > $this->maxDistanceY) {
-			if(!$player->isOnGround() && (PlayerUtil::getServerTick() - PlayerUtil::getlastDamageCausedByEntityServerTick($player)) > 5)
+			if(!$player->isOnGround() && (ClientUtil::getServerTick() - PlayerUtil::getlastDamageCausedByEntityServerTick($player)) > 5)
 			$this->addWarning(1, $player);
 			$this->checkAndFirePunishment($this, $player);
 			return "Jumped too high";

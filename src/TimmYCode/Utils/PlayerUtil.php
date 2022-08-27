@@ -10,7 +10,7 @@ use pocketmine\player\Player;
 class PlayerUtil
 {
 
-	private static array $damageCausedByEntityServerTick = array(), $damageCausedByPlayerServerTick = array(), $jumpServerTick = array(), $deathServerTick = array(), $respawnServerTick = array(), $jumpPosition = array();
+	private static array $damageCausedByEntityServerTick = array(), $damageCausedByPlayerServerTick = array(), $jumpServerTick = array(), $deathServerTick = array(), $respawnServerTick = array(), $inventoryTransactionServerTick = array(), $jumpPosition = array(), $inventoryOpened = array();
 
 	static function getOS(Player $player) : int {
 		return $player->getNetworkSession()->getPlayerInfo()->getExtraData()["DeviceOS"];
@@ -85,11 +85,6 @@ class PlayerUtil
 		return $player->getJumpVelocity() == 0.42;
 	}
 
-	static function getServerTick(): int
-	{
-		return SpyOne::getInstance()->getServer()->getTick();
-	}
-
 	static function entityToPlayer($entityNameTag, $entityId) : ?Player
 	{
 		foreach (SpyOne::getInstance()->getServer()->getOnlinePlayers() as $onlinePlayer) {
@@ -112,38 +107,50 @@ class PlayerUtil
 
 	static function addlastDamageCausedByEntityServerTick(Player $player, int $serverTick): void
 	{
-		$playerPositionInArray = self::playerXuidExistsInArray($player, self::$damageCausedByEntityServerTick);
+		$playerPositionInArray = ClientUtil::playerXuidExistsInArray($player, self::$damageCausedByEntityServerTick);
 		$playerPositionInArray != -1 ? self::$damageCausedByEntityServerTick[$player->getXuid()] = $serverTick : self::$damageCausedByEntityServerTick += [$player->getXuid() => $serverTick];
 	}
 
 	static function addlastDamageCausedByPlayerServerTick(Player $player, int $serverTick): void
 	{
-		$playerPositionInArray = self::playerXuidExistsInArray($player, self::$damageCausedByPlayerServerTick);
+		$playerPositionInArray = ClientUtil::playerXuidExistsInArray($player, self::$damageCausedByPlayerServerTick);
 		$playerPositionInArray != -1 ? self::$damageCausedByPlayerServerTick[$player->getXuid()] = $serverTick : self::$damageCausedByPlayerServerTick += [$player->getXuid() => $serverTick];
 	}
 
 	static function addlastJumpServerTick(Player $player, int $serverTick): void
 	{
-		$playerPositionInArray = self::playerXuidExistsInArray($player, self::$jumpServerTick);
+		$playerPositionInArray = ClientUtil::playerXuidExistsInArray($player, self::$jumpServerTick);
 		$playerPositionInArray != -1 ? self::$jumpServerTick[$player->getXuid()] = $serverTick : self::$jumpServerTick += [$player->getXuid() => $serverTick];
 	}
 
 	static function addlastDeathServerTick(Player $player, int $serverTick): void
 	{
-		$playerPositionInArray = self::playerXuidExistsInArray($player, self::$deathServerTick);
+		$playerPositionInArray = ClientUtil::playerXuidExistsInArray($player, self::$deathServerTick);
 		$playerPositionInArray != -1 ? self::$deathServerTick[$player->getXuid()] = $serverTick : self::$deathServerTick += [$player->getXuid() => $serverTick];
 	}
 
 	static function addlastRespawnServerTick(Player $player, int $serverTick): void
 	{
-		$playerPositionInArray = self::playerXuidExistsInArray($player, self::$respawnServerTick);
+		$playerPositionInArray = ClientUtil::playerXuidExistsInArray($player, self::$respawnServerTick);
 		$playerPositionInArray != -1 ? self::$respawnServerTick[$player->getXuid()] = $serverTick : self::$respawnServerTick += [$player->getXuid() => $serverTick];
+	}
+
+	static function addlastInventoryTransactionServerTick(Player $player, int $serverTick): void
+	{
+		$playerPositionInArray = ClientUtil::playerXuidExistsInArray($player, self::$inventoryTransactionServerTick);
+		$playerPositionInArray != -1 ? self::$inventoryTransactionServerTick[$player->getXuid()] = $serverTick : self::$inventoryTransactionServerTick += [$player->getXuid() => $serverTick];
 	}
 
 	static function addlastJumpPosition(Player $player, array $pos): void
 	{
-		$playerPositionInArray = self::playerXuidExistsInArray($player, self::$jumpServerTick);
+		$playerPositionInArray = ClientUtil::playerXuidExistsInArray($player, self::$jumpServerTick);
 		$playerPositionInArray != -1 ? self::$jumpPosition[$playerPositionInArray] = $pos : self::$jumpPosition[] = $pos;
+	}
+
+	static function addInventoryOpen(Player $player, bool $status): void
+	{
+		$playerPositionInArray = ClientUtil::playerXuidExistsInArray($player, self::$inventoryOpened);
+		$playerPositionInArray != -1 ? self::$inventoryOpened[$playerPositionInArray] = $status : self::$jumpPosition[] = $status;
 	}
 
 	static function getlastDamageCausedByEntityServerTick(Player $player): int
@@ -166,7 +173,7 @@ class PlayerUtil
 
 	static function getlastJumpPosition(Player $player): array
 	{
-		$jumpPosition =  ClientUtil::getValueOfArray(self::$jumpPosition, self::playerXuidExistsInArray($player, self::$jumpServerTick));
+		$jumpPosition =  ClientUtil::getValueOfArray(self::$jumpPosition, ClientUtil::playerXuidExistsInArray($player, self::$jumpServerTick));
 		return $jumpPosition != null ? $jumpPosition : self::getPosition($player);
 	}
 
@@ -180,6 +187,18 @@ class PlayerUtil
 	{
 		$serverTick =  ClientUtil::getValueOfArray(self::$respawnServerTick, $player->getXuid());
 		return $serverTick != null ? $serverTick : 0;
+	}
+
+	static function getlastInventoryTransactionTick(Player $player): int
+	{
+		$serverTick =  ClientUtil::getValueOfArray(self::$inventoryTransactionServerTick, $player->getXuid());
+		return $serverTick != null ? $serverTick : 0;
+	}
+
+	static function getInventoryOpen(Player $player): int
+	{
+		$status =  ClientUtil::getValueOfArray(self::$respawnServerTick, $player->getXuid());
+		return $status != null ? $status : false;
 	}
 
 	static function recentlyDied(Player $player): bool
@@ -198,30 +217,6 @@ class PlayerUtil
 	{
 		$serverTick =  ClientUtil::getValueOfArray(self::$respawnServerTick, $player->getXuid()) != null ? ClientUtil::getValueOfArray(self::$respawnServerTick, $player->getXuid()) : 0;
 		return (SpyOne::getInstance()->getServer()->getTick() - $serverTick) < 30;
-	}
-
-	static function playerExistsInArray(Player $player, array $array): int {
-		$arraySize = count($array);
-		$keys = array_keys($array);
-
-		for ($x = 0; $x < $arraySize; $x++){
-			if($array[$keys[$x]] == $player) {
-				return $x;
-			}
-		}
-		return -1;
-	}
-
-	static function playerXuidExistsInArray(Player $player, array $array): int {
-		$arraySize = count($array);
-		$keys = array_keys($array);
-
-		for ($x = 0; $x < $arraySize; $x++){
-			if($keys[$x] == $player->getXuid()) {
-				return $x;
-			}
-		}
-		return -1;
 	}
 
 }

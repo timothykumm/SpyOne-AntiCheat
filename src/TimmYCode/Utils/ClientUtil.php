@@ -3,6 +3,7 @@
 namespace TimmYCode\Utils;
 
 use pocketmine\player\Player;
+use TimmYCode\SpyOne;
 
 class ClientUtil
 {
@@ -38,4 +39,35 @@ class ClientUtil
 			$keys[array_search($value, $values)] = $newkey;
 			return array_combine($keys, $values);
 	}
+
+	static function playerExistsInArray(Player $player, array $array): int {
+		$arraySize = count($array);
+		$keys = array_keys($array);
+
+		for ($x = 0; $x < $arraySize; $x++){
+			if($array[$keys[$x]] == $player) {
+				return $x;
+			}
+		}
+		return -1;
+	}
+
+	static function playerXuidExistsInArray(Player $player, array $array): int {
+		$arraySize = count($array);
+		$keys = array_keys($array);
+
+		for ($x = 0; $x < $arraySize; $x++){
+			if($keys[$x] == $player->getXuid()) {
+				return $x;
+			}
+		}
+		return -1;
+	}
+
+	static function getServerTick(): int
+	{
+		return SpyOne::getInstance()->getServer()->getTick();
+	}
+
+
 }

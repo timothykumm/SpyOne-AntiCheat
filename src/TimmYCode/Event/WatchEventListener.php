@@ -4,7 +4,7 @@ namespace TimmYCode\Event;
 
 use TimmYCode\Modules\ModuleBase;
 use TimmYCode\SpyOne;
-use TimmYCode\Utils\PlayerUtil;
+use TimmYCode\Utils\ClientUtil;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
@@ -28,7 +28,7 @@ class WatchEventListener implements Listener
 
 	public function onLeave(PlayerQuitEvent $event) {
 		unset(self::$spyOnePlayerList[$event->getPlayer()->getXuid()]);
-		unset(self::$spyOnePlayerModuleList[PlayerUtil::playerExistsInArray($event->getPlayer(), self::$spyOnePlayerList)]);
+		unset(self::$spyOnePlayerModuleList[ClientUtil::playerExistsInArray($event->getPlayer(), self::$spyOnePlayerList)]);
 	}
 
 }
