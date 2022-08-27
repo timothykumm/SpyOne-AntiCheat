@@ -2,17 +2,14 @@
 
 namespace TimmYCode\Modules\Movement;
 
+use pocketmine\event\Event;
 use TimmYCode\Modules\ModuleBase;
 use TimmYCode\Modules\Module;
 use TimmYCode\Punishment\Methods\Message;
 use TimmYCode\Punishment\Punishment;
-use TimmYCode\SpyOne;
-use TimmYCode\Utils\BlockUtil;
 use TimmYCode\Utils\PlayerUtil;
 use TimmYCode\Utils\TickUtil;
-use pocketmine\block\VanillaBlocks;
 use pocketmine\event\entity\EntityEvent;
-use pocketmine\event\player\PlayerEvent;
 use pocketmine\player\Player;
 
 class AntiStep extends ModuleBase implements Module
@@ -47,7 +44,7 @@ class AntiStep extends ModuleBase implements Module
 		return "";
 	}
 
-	public function checkMovement(PlayerEvent $event, Player $player): String
+	public function check(Event $event, Player $player): String
 	{
 		if(!$this->isActive()) return "";
 

@@ -2,9 +2,6 @@
 
 namespace TimmYCode\Punishment;
 
-use TimmYCode\SpyOne;
-use pocketmine\event\Event;
-use pocketmine\event\Listener;
 use pocketmine\player\Player;
 
 interface Punishment

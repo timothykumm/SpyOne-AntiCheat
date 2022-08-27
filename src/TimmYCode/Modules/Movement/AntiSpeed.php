@@ -2,19 +2,17 @@
 
 namespace TimmYCode\Modules\Movement;
 
+use pocketmine\event\Event;
 use TimmYCode\Modules\ModuleBase;
 
 use TimmYCode\Modules\Module;
-use TimmYCode\Punishment\Methods\Kick;
 use TimmYCode\Punishment\Methods\Message;
 use TimmYCode\Punishment\Punishment;
-use TimmYCode\SpyOne;
 use TimmYCode\Utils\BlockUtil;
+use TimmYCode\Utils\ClientUtil;
 use TimmYCode\Utils\PlayerUtil;
 use TimmYCode\Utils\TickUtil;
 use pocketmine\block\VanillaBlocks;
-use pocketmine\event\entity\EntityEvent;
-use pocketmine\event\player\PlayerEvent;
 use pocketmine\player\Player;
 
 class AntiSpeed extends ModuleBase implements Module
@@ -46,16 +44,11 @@ class AntiSpeed extends ModuleBase implements Module
 		$this->counter = new TickUtil(0);
 	}
 
-	public function checkCombat(EntityEvent $event, Player $damager, Player $target): string
-	{
-		return "";
-	}
-
-	public function checkMovement(PlayerEvent $event, Player $player): String
+	public function checkMovement(Event $event, Player $player): String
 	{
 		if(!$this->isActive()) return "disabled";
 
-		$this->jumpTickDifference = (PlayerUtil::getServerTick() - PlayerUtil::getlastJumpServerTick($player));
+		$this->jumpTickDifference = (ClientUtil::getServerTick() - PlayerUtil::getlastJumpServerTick($player));
 
 		if ($this->counter->reachedTick(10)) {
 			$this->from = array(PlayerUtil::getX($player), PlayerUtil::getY($player), PlayerUtil::getZ($player));
