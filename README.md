@@ -19,6 +19,10 @@ AntiCheat for Minecraft Bedrock (Pocketmine)
 
 ✅ Jesus
 
+✅ AirJump
+
+⏲ InventoryMove (Small bug, will be fixed soon)
+
 ❌ Plugin still in development and probably unstable. 
 
 
