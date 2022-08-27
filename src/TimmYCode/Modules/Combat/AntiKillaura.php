@@ -2,13 +2,12 @@
 
 namespace TimmYCode\Modules\Combat;
 
+use pocketmine\event\Event;
 use TimmYCode\Modules\ModuleBase;
 use TimmYCode\Modules\Module;
 use TimmYCode\Punishment\Methods\Message;
 use TimmYCode\Punishment\Punishment;
 use TimmYCode\Utils\PlayerUtil;
-use pocketmine\event\entity\EntityEvent;
-use pocketmine\event\player\PlayerEvent;
 use pocketmine\player\Player;
 
 class AntiKillaura extends ModuleBase implements Module
@@ -35,7 +34,7 @@ class AntiKillaura extends ModuleBase implements Module
 
 	}
 
-	public function checkCombat(EntityEvent $event, Player $damager, Player $target): string
+	public function check2(Event $event, Player $damager, Player $target): string
 	{
 		if(!$this->isActive() || PlayerUtil::combatInfluenced($damager)) return "";
 
@@ -67,11 +66,6 @@ class AntiKillaura extends ModuleBase implements Module
 		}
 
 		$this->setWarning(0);
-		return "";
-	}
-
-	public function checkMovement(PlayerEvent $event, Player $player): String
-	{
 		return "";
 	}
 

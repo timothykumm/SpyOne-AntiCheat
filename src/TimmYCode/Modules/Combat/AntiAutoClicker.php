@@ -2,14 +2,13 @@
 
 namespace TimmYCode\Modules\Combat;
 
+use pocketmine\event\Event;
 use TimmYCode\Modules\ModuleBase;
 use TimmYCode\Modules\Module;
 use TimmYCode\Punishment\Methods\Message;
 use TimmYCode\Punishment\Punishment;
-use TimmYCode\Utils\PlayerUtil;
+use TimmYCode\Utils\ClientUtil;
 use TimmYCode\Utils\TickUtil;
-use pocketmine\event\entity\EntityEvent;
-use pocketmine\event\player\PlayerEvent;
 use pocketmine\player\Player;
 
 class AntiAutoClicker extends ModuleBase implements Module
@@ -39,7 +38,7 @@ class AntiAutoClicker extends ModuleBase implements Module
 		$this->hitCount = new TickUtil(0);
 	}
 
-	public function checkCombat(EntityEvent $event, Player $damager, Player $target): string
+	public function check2(Event $event, Player $damager, Player $target): string
 	{
 		if(!$this->isActive()) return "";
 		$this->checkAndFirePunishment($this, $damager);
@@ -47,19 +46,14 @@ class AntiAutoClicker extends ModuleBase implements Module
 		$this->hitCount->increaseTick(1);
 
 		if($this->hitCount->reachedTick(1)) {
-			$this->startTick = PlayerUtil::getServerTick();
+			$this->startTick = ClientUtil::getServerTick();
 		} else if($this->hitCount->reachedTick(10)){
-			$this->cps = (PlayerUtil::getServerTick() - $this->startTick);
+			$this->cps = (ClientUtil::getServerTick() - $this->startTick);
 			$this->hitCount->resetTick();
 			$damager->sendMessage($this->cps);
 			return $this->cps;
 		}
 
-		return "";
-	}
-
-	public function checkMovement(PlayerEvent $event, Player $player): String
-	{
 		return "";
 	}
 

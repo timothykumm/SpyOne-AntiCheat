@@ -2,6 +2,7 @@
 
 namespace TimmYCode\Modules\Movement;
 
+use pocketmine\event\Event;
 use TimmYCode\Modules\ModuleBase;
 use TimmYCode\Modules\Module;
 use TimmYCode\Punishment\Methods\Message;
@@ -10,9 +11,6 @@ use TimmYCode\Utils\BlockUtil;
 use TimmYCode\Utils\PlayerUtil;
 use TimmYCode\Utils\TickUtil;
 use pocketmine\block\VanillaBlocks;
-use pocketmine\event\entity\EntityDamageByEntityEvent;
-use pocketmine\event\entity\EntityEvent;
-use pocketmine\event\player\PlayerEvent;
 use pocketmine\player\Player;
 
 class AntiGlide extends ModuleBase implements Module
@@ -43,12 +41,7 @@ class AntiGlide extends ModuleBase implements Module
 		$this->glideCounter = new TickUtil(0);
 	}
 
-	public function checkCombat(EntityEvent $event, Player $damager, Player $target): string
-	{
-		return "";
-	}
-
-	public function checkMovement(PlayerEvent $event, Player $player): String
+	public function check(Event $event, Player $player): String
 	{
 		if (!$this->isActive()) return "";
 

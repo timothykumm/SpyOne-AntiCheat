@@ -7,31 +7,31 @@ use TimmYCode\Modules\ModuleBase;
 use TimmYCode\Modules\Module;
 use TimmYCode\Punishment\Methods\Message;
 use TimmYCode\Punishment\Punishment;
+use TimmYCode\Utils\ClientUtil;
 use TimmYCode\Utils\PlayerUtil;
 use TimmYCode\Utils\TickUtil;
-use pocketmine\event\entity\EntityEvent;
 use pocketmine\player\Player;
 
-class AntiStep extends ModuleBase implements Module
+class AntiAirJump extends ModuleBase implements Module
 {
 
 	private TickUtil $counter;
+	private float $jumpDistanceY = 0.42;
 	private float $from = 0.0, $to = 0.0;
-	private float $maxStep = 1.0;
 
 	public function getName() : String
 	{
-		return "AntiStep";
+		return "AntiAirJump";
 	}
 
 	public function warningLimit(): int
 	{
-		return 1;
+		return 2;
 	}
 
 	public function punishment(): Punishment
 	{
-		return new Message("Step detected");
+		return new Message("Air Jump detected");
 	}
 
 	public function setup(): void
@@ -39,16 +39,15 @@ class AntiStep extends ModuleBase implements Module
 		$this->counter = new TickUtil(0);
 	}
 
-	public function checkCombat(EntityEvent $event, Player $damager, Player $target): string
-	{
-		return "";
-	}
-
 	public function check(Event $event, Player $player): String
 	{
-		if(!$this->isActive()) return "";
+		if (!$this->isActive()) return "";
 
-		if($this->counter->reachedTick(0)) {
+		if(PlayerUtil::jumpHeightInfluenced($player)) {
+			return "Jump height influenced";
+		}
+
+		if ($this->counter->reachedTick(0)) {
 			$this->from = PlayerUtil::getY($player);
 			$this->counter->increaseTick(1);
 			return "";
@@ -56,16 +55,17 @@ class AntiStep extends ModuleBase implements Module
 
 		$this->to = PlayerUtil::getY($player);
 		$this->counter->resetTick();
-		if(($this->to - $this->from) >= $this->maxStep) {
-			if($player->isOnGround() && !PlayerUtil::recentlyHurt($player)) {
-				if(!PlayerUtil::stepsInfluenced($player)) {
-					$this->addWarning(1, $player);
-					$this->checkAndFirePunishment($this, $player);
-					return "Stepped up too fast";
-				}
-			}
+
+		$distance = ($this->to - $this->from);
+
+		if($distance < $this->jumpDistanceY + 0.02 && $distance > $this->jumpDistanceY - 0.02) {
+			if(!$player->isOnGround() && (ClientUtil::getServerTick() - PlayerUtil::getlastDamageCausedByEntityServerTick($player)) > 5 && $player->getInAirTicks() > 4)
+				$this->addWarning(1, $player);
+			$this->checkAndFirePunishment($this, $player);
+			return "Jumped mid air";
 		}
-		return "DistanceY " . ($this->to - $this->from) . " " . $this->from . " " . $this->to;
+
+		return "DistanceY " . $distance;
 	}
 
 }

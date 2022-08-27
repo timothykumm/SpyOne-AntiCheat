@@ -2,16 +2,19 @@
 
 namespace TimmYCode\Modules;
 
+use pocketmine\event\Event;
 use TimmYCode\Modules\Combat\AntiAutoClicker;
 use TimmYCode\Modules\Combat\AntiKillaura;
 use TimmYCode\Modules\Combat\AntiNoKnockback;
 use TimmYCode\Modules\Combat\AntiReach;
+use TimmYCode\Modules\Movement\AntiAirJump;
 use TimmYCode\Modules\Movement\AntiGlide;
 use TimmYCode\Modules\Movement\AntiHighJump;
 use TimmYCode\Modules\Movement\AntiJesus;
 use TimmYCode\Modules\Movement\AntiSpeed;
 use TimmYCode\Modules\Movement\AntiSpeed2;
 use TimmYCode\Modules\Movement\AntiStep;
+use TimmYCode\Modules\Other\AntiInventoryMove;
 use TimmYCode\Utils\PlayerUtil;
 use pocketmine\player\Player;
 
@@ -32,7 +35,9 @@ class ModuleBase
 			"AntiNoKnockback" => new AntiNoKnockback(),
 			"AntiKillaura" => new AntiKillaura(),
 			"AntiAutoClicker" => new AntiAutoClicker(),
-			"AntiJesus" => new AntiJesus()
+			"AntiJesus" => new AntiJesus(),
+			"AntiAirJump" => new AntiAirJump(),
+			"AntiInventoryMove" => new AntiInventoryMove()
 		);
 
 		if($setup) $this->setupModules();
@@ -90,6 +95,14 @@ class ModuleBase
 
 	public function addWarning(int $warning, Player $player) : void {
 		if(!PlayerUtil::recentlyRespawned($player)) $this->warnings += $warning;
+	}
+
+	public function check(Event $event, Player $player) : String {
+		return "";
+	}
+
+	public function check2(Event $event, Player $player, Player $target) : String {
+		return "";
 	}
 
 }

@@ -2,6 +2,7 @@
 
 namespace TimmYCode\Modules\Movement;
 
+use pocketmine\event\Event;
 use TimmYCode\Modules\ModuleBase;
 use TimmYCode\Modules\Module;
 use TimmYCode\Punishment\Methods\Message;
@@ -10,8 +11,6 @@ use TimmYCode\Utils\BlockUtil;
 use TimmYCode\Utils\PlayerUtil;
 use TimmYCode\Utils\TickUtil;
 use pocketmine\block\VanillaBlocks;
-use pocketmine\event\entity\EntityEvent;
-use pocketmine\event\player\PlayerEvent;
 use pocketmine\player\Player;
 
 class AntiJesus extends ModuleBase implements Module
@@ -42,12 +41,7 @@ class AntiJesus extends ModuleBase implements Module
 		$this->counter = new TickUtil(0);
 	}
 
-	public function checkCombat(EntityEvent $event, Player $damager, Player $target): string
-	{
-		return "";
-	}
-
-	public function checkMovement(PlayerEvent $event, Player $player): string
+	public function check(Event $event, Player $player): string
 	{
 		if (!$this->isActive()) return "";
 		if (!BlockUtil::blockUnder(PlayerUtil::getPosition($player), $player->getWorld())->isSameType(VanillaBlocks::WATER())) {
