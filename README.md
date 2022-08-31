@@ -23,6 +23,8 @@ AntiCheat for Minecraft Bedrock (Pocketmine)
 
 ✅ InventoryMove
 
+✅ AutoArmor
+
 ❌ Plugin still in development and probably unstable. 
 
 

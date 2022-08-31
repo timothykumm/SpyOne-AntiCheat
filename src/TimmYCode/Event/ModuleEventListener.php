@@ -4,6 +4,7 @@ namespace TimmYCode\Event;
 
 use TimmYCode\Event\Custom\ContainerCloseEvent;
 use TimmYCode\Event\Custom\ContainerOpenEvent;
+use TimmYCode\Event\Custom\InventoryContentChangeEvent;
 use TimmYCode\SpyOne;
 use TimmYCode\Utils\BlockUtil;
 use TimmYCode\Utils\ClientUtil;
@@ -85,6 +86,19 @@ class ModuleEventListener implements Listener
 		$playerXuid = $event->getPlayerXuid();
 		$player = PlayerUtil::xuidToPlayer($playerXuid);
 		PlayerUtil::addlastInventoryOpenPos($playerXuid, PlayerUtil::getPosition($player));
+	}
+
+	public function onInventoryContentChangeEvent(InventoryContentChangeEvent $event) {
+		$playerXuid = $event->getPlayerXuid();
+		$player = PlayerUtil::xuidToPlayer($playerXuid);
+		$playerIndex = ClientUtil::playerExistsInArray($player, WatchEventListener::$spyOnePlayerList);
+
+		if ($playerIndex == -1) return;
+
+		PlayerUtil::addlastInventoryContentChange($player, ClientUtil::getServerTick(), 1);
+		if(PlayerUtil::getlastInventoryContentChangeTick($player) > 4) {
+			WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiAutoArmor")->check($event, $player);
+		}
 	}
 
 	public function onContainerClose(ContainerCloseEvent $event)

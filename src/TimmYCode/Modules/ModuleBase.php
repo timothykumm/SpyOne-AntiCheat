@@ -14,6 +14,7 @@ use TimmYCode\Modules\Movement\AntiJesus;
 use TimmYCode\Modules\Movement\AntiSpeed;
 use TimmYCode\Modules\Movement\AntiSpeed2;
 use TimmYCode\Modules\Movement\AntiStep;
+use TimmYCode\Modules\Other\AntiAutoArmor;
 use TimmYCode\Modules\Other\AntiInventoryMove;
 use TimmYCode\Utils\PlayerUtil;
 use pocketmine\player\Player;
@@ -37,7 +38,8 @@ class ModuleBase
 			"AntiAutoClicker" => new AntiAutoClicker(),
 			"AntiJesus" => new AntiJesus(),
 			"AntiAirJump" => new AntiAirJump(),
-			"AntiInventoryMove" => new AntiInventoryMove()
+			"AntiInventoryMove" => new AntiInventoryMove(),
+			"AntiAutoArmor" => new AntiAutoArmor()
 		);
 
 		if($setup) $this->setupModules();

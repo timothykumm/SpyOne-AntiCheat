@@ -10,10 +10,10 @@ use pocketmine\player\Player;
 class PlayerUtil
 {
 
-	private static array $damageCausedByEntityServerTick = array(), $damageCausedByPlayerServerTick = array(), $jumpServerTick = array(), $deathServerTick = array(), $respawnServerTick = array(), $jumpPosition = array(), $inventoryOpened = array();
+	private static array $damageCausedByEntityServerTick = array(), $damageCausedByPlayerServerTick = array(), $jumpServerTick = array(), $deathServerTick = array(), $respawnServerTick = array(), $jumpPosition = array(), $inventoryContentChanged = array();
 
 	//InventoryWalk var
-	private static array $inventoryTransactionServerTick = array(), $inventoryTransactionPickPos = array();
+	private static array $inventoryTransactionPickPos = array();
 
 	static function getOS(Player $player) : int {
 		return $player->getNetworkSession()->getPlayerInfo()->getExtraData()["DeviceOS"];
@@ -148,10 +148,20 @@ class PlayerUtil
 		$playerPositionInArray != -1 ? self::$respawnServerTick[$player->getXuid()] = $serverTick : self::$respawnServerTick += [$player->getXuid() => $serverTick];
 	}
 
-	static function addlastInventoryTransactionServerTick(Player $player, int $serverTick): void
+	static function addlastInventoryContentChange(Player $player, int $serverTick, int $count): void
 	{
-		$playerPositionInArray = ClientUtil::playerXuidExistsInArray($player->getXuid(), self::$inventoryTransactionServerTick);
-		$playerPositionInArray != -1 ? self::$inventoryTransactionServerTick[$player->getXuid()] = $serverTick : self::$inventoryTransactionServerTick += [$player->getXuid() => $serverTick];
+		$playerPositionInArray = ClientUtil::playerXuidExistsInArray($player->getXuid(), self::$inventoryContentChanged);
+		if($playerPositionInArray != -1) {
+
+			if(self::$inventoryContentChanged[$player->getXuid()][0] != $serverTick) {
+				self::$inventoryContentChanged[$player->getXuid()][1]  = 0;
+			}
+
+			self::$inventoryContentChanged[$player->getXuid()][0] = $serverTick;
+			self::$inventoryContentChanged[$player->getXuid()][1] += $count;
+		} else{
+			self::$inventoryContentChanged += [$player->getXuid() => array($serverTick, $count)];
+		}
 	}
 
 	static function addlastInventoryOpenPos(String $playerXuid, array $pos): void
@@ -202,10 +212,10 @@ class PlayerUtil
 		return $serverTick != null ? $serverTick : 0;
 	}
 
-	static function getlastInventoryTransactionTick(Player $player): int
+	static function getlastInventoryContentChangeTick(Player $player): int
 	{
-		$serverTick =  ClientUtil::getValueOfArray(self::$inventoryTransactionServerTick, $player->getXuid());
-		return $serverTick != null ? $serverTick : 0;
+		$serverTick =  ClientUtil::getValueOfArray(self::$inventoryContentChanged, $player->getXuid());
+		return $serverTick[1] != null ? $serverTick[1] : 0;
 	}
 
 	static function getlastInventoryOpenPos(String $playerXuid): array
