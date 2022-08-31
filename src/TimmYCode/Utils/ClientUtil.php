@@ -52,12 +52,12 @@ class ClientUtil
 		return -1;
 	}
 
-	static function playerXuidExistsInArray(Player $player, array $array): int {
+	static function playerXuidExistsInArray(String $playerXuid, array $array): int {
 		$arraySize = count($array);
 		$keys = array_keys($array);
 
 		for ($x = 0; $x < $arraySize; $x++){
-			if($keys[$x] == $player->getXuid()) {
+			if($keys[$x] == $playerXuid) {
 				return $x;
 			}
 		}

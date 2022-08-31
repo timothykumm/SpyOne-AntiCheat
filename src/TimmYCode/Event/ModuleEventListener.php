@@ -2,11 +2,10 @@
 
 namespace TimmYCode\Event;
 
-use pocketmine\event\inventory\InventoryCloseEvent;
-use pocketmine\event\inventory\InventoryOpenEvent;
-use pocketmine\event\inventory\InventoryTransactionEvent;
-use pocketmine\inventory\transaction\action\DropItemAction;
+use TimmYCode\Event\Custom\ContainerCloseEvent;
+use TimmYCode\Event\Custom\ContainerOpenEvent;
 use TimmYCode\SpyOne;
+use TimmYCode\Utils\BlockUtil;
 use TimmYCode\Utils\ClientUtil;
 use TimmYCode\Utils\PlayerUtil;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
@@ -18,29 +17,30 @@ use pocketmine\event\player\PlayerRespawnEvent;
 class ModuleEventListener implements Listener
 {
 
-	public function onMovement(PlayerMoveEvent $event) {
-				$player = $event->getPlayer();
-				$playerIndex = ClientUtil::playerExistsInArray($player, WatchEventListener::$spyOnePlayerList);
+	public function onMovement(PlayerMoveEvent $event)
+	{
+		$player = $event->getPlayer();
+		$playerIndex = ClientUtil::playerExistsInArray($player, WatchEventListener::$spyOnePlayerList);
 
-				if($playerIndex == -1) return;
-				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiStep")->check($event, $player);
-				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiSpeed")->check($event, $player);
-				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiSpeed2")->check($event, $player);
-				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiHighJump")->check($event, $player);
-				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiGlide")->check($event, $player);
-				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiNoKnockback")->check($event, $player);
-				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiJesus")->check($event, $player);
-				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiAirJump")->check($event, $player);
-				//WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiInventoryMove")->check($event, $player);
+		if ($playerIndex == -1) return;
+		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiStep")->check($event, $player);
+		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiSpeed")->check($event, $player);
+		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiSpeed2")->check($event, $player);
+		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiHighJump")->check($event, $player);
+		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiGlide")->check($event, $player);
+		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiNoKnockback")->check($event, $player);
+		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiJesus")->check($event, $player);
+		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiAirJump")->check($event, $player);
 
 	}
 
-	public function onDamage(EntityDamageByEntityEvent $event) {
+	public function onDamage(EntityDamageByEntityEvent $event)
+	{
 		$damager = $event->getDamager();
 		$target = $event->getEntity();
 		$actualCooldown = $event->getAttackCooldown();
 
-		if(PlayerUtil::isPlayer($target->getNameTag(), $target->getId())) {
+		if (PlayerUtil::isPlayer($target->getNameTag(), $target->getId())) {
 			$targetToPlayer = PlayerUtil::entityToPlayer($target->getNameTag(), $target->getId());
 			PlayerUtil::addlastDamageCausedByEntityServerTick(PlayerUtil::entityToPlayer($target->getNameTag(), $target->getId()), SpyOne::getInstance()->getServer()->getTick());
 
@@ -57,9 +57,9 @@ class ModuleEventListener implements Listener
 				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiKillaura")->check2($event, $damagerToPlayer, $targetToPlayer);
 				//WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiAutoClicker")->checkCombat($event, $damagerToPlayer, $targetToPlayer);
 
-				if($modifiedCooldown < $actualCooldown) {
+				if ($modifiedCooldown < $actualCooldown) {
 					$event->cancel();
-				} else{
+				} else {
 					PlayerUtil::addlastDamageCausedByPlayerServerTick($damagerToPlayer, SpyOne::getInstance()->getServer()->getTick());
 					$output = WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiNoKnockback")->check2($event, $damagerToPlayer, $targetToPlayer);
 					//$output != "" ?? $damagerToPlayer->sendMessage($output);
@@ -69,36 +69,37 @@ class ModuleEventListener implements Listener
 		}
 	}
 
-	public function onJump(PlayerJumpEvent $event) {
+	public function onJump(PlayerJumpEvent $event)
+	{
 		PlayerUtil::addlastJumpServerTick(PlayerUtil::entityToPlayer($event->getPlayer()->getNameTag(), $event->getPlayer()->getId()), SpyOne::getInstance()->getServer()->getTick());
 		PlayerUtil::addlastJumpPosition($event->getPlayer(), array(PlayerUtil::getX($event->getPlayer()), PlayerUtil::getY($event->getPlayer()), PlayerUtil::getZ($event->getPlayer())));
 	}
 
-	public function onDeath(PlayerRespawnEvent $event) {
+	public function onDeath(PlayerRespawnEvent $event)
+	{
 		PlayerUtil::addlastRespawnServerTick(PlayerUtil::entityToPlayer($event->getPlayer()->getNameTag(), $event->getPlayer()->getId()), SpyOne::getInstance()->getServer()->getTick());
 	}
 
-	public function onInventoryOpen(InventoryOpenEvent $event) {
-		PlayerUtil::addInventoryOpen(PlayerUtil::entityToPlayer($event->getPlayer()->getNameTag(), $event->getPlayer()->getId()), true);
+	public function onContainerOpen(ContainerOpenEvent $event)
+	{
+		$playerXuid = $event->getPlayerXuid();
+		$player = PlayerUtil::xuidToPlayer($playerXuid);
+		PlayerUtil::addlastInventoryOpenPos($playerXuid, PlayerUtil::getPosition($player));
 	}
 
-	public function onInventoryClose(InventoryCloseEvent $event) {
-		PlayerUtil::addInventoryOpen(PlayerUtil::entityToPlayer($event->getPlayer()->getNameTag(), $event->getPlayer()->getId()), false);
-	}
-
-	public function onInventoryChange(InventoryTransactionEvent $event) {
-
-		$player = $event->getTransaction()->getSource();
+	public function onContainerClose(ContainerCloseEvent $event)
+	{
+		$playerXuid = $event->getPlayerXuid();
+		$player = PlayerUtil::xuidToPlayer($playerXuid);
 		$playerIndex = ClientUtil::playerExistsInArray($player, WatchEventListener::$spyOnePlayerList);
 
-		if($playerIndex == -1) return;
+		if ($playerIndex == -1) return;
 
-		foreach ($event->getTransaction()->getActions() as $i) {
-			if($i instanceof DropItemAction) return;
-		}
+			if (BlockUtil::calculateDistanceWithY(PlayerUtil::getlastInventoryOpenPos($playerXuid), PlayerUtil::getPosition($player)) > 4) {
+				//$player->sendMessage("Distance: " . BlockUtil::calculateDistance(PlayerUtil::getlastInventoryOpenPos($playerXuid), PlayerUtil::getPosition($player)));
+				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiInventoryMove")->check($event, $player);
+			}
 
-		PlayerUtil::addlastInventoryTransactionServerTick($player, ClientUtil::getServerTick());
-
+			PlayerUtil::addlastInventoryOpenPos($playerXuid, array());
 	}
-
 }
