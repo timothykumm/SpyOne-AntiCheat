@@ -63,6 +63,10 @@ class ModuleBase
 		return $this->active;
 	}
 
+	public function getIgnored(Player $player) : bool {
+		return $player->hasPermission("spyone.ignore");
+	}
+
 	public function getModuleList() : array {
 		return $this->modules;
 	}

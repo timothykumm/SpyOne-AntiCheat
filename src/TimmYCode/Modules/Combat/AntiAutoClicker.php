@@ -40,7 +40,7 @@ class AntiAutoClicker extends ModuleBase implements Module
 
 	public function check2(Event $event, Player $damager, Player $target): string
 	{
-		if(!$this->isActive()) return "";
+		if (!$this->isActive() || $this->getIgnored($player)) return "";
 		$this->checkAndFirePunishment($this, $damager);
 
 		$this->hitCount->increaseTick(1);

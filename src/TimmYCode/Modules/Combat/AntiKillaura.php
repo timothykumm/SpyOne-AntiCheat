@@ -36,7 +36,7 @@ class AntiKillaura extends ModuleBase implements Module
 
 	public function check2(Event $event, Player $damager, Player $target): string
 	{
-		if(!$this->isActive() || PlayerUtil::combatInfluenced($damager)) return "";
+		if (!$this->isActive() || $this->getIgnored($player)) return "";
 
 		$posFoot = $damager->getPosition()->asVector3();
 		$posHead = $damager->getEyePos()->asVector3();

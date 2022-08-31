@@ -41,7 +41,7 @@ class AntiAirJump extends ModuleBase implements Module
 
 	public function check(Event $event, Player $player): String
 	{
-		if (!$this->isActive()) return "";
+		if (!$this->isActive() || $this->getIgnored($player)) return "";
 
 		if(PlayerUtil::jumpHeightInfluenced($player)) {
 			return "Jump height influenced";

@@ -43,7 +43,7 @@ class AntiGlide extends ModuleBase implements Module
 
 	public function check(Event $event, Player $player): String
 	{
-		if (!$this->isActive()) return "";
+		if (!$this->isActive() || $this->getIgnored($player)) return "";
 
 		if ($this->counter->reachedTick(0)) {
 			$this->from = PlayerUtil::getY($player);

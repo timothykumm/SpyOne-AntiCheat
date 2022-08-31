@@ -35,7 +35,7 @@ class AntiAutoArmor extends ModuleBase implements Module
 
 	public function check(Event $event, Player $player): String
 	{
-		if (!$this->isActive()) return "";
+		if (!$this->isActive() || $this->getIgnored($player)) return "";
 
 			$this->addWarning(1, $player);
 			$this->checkAndFirePunishment($this, $player);

@@ -39,7 +39,7 @@ class AntiReach extends ModuleBase implements Module
 
 	public function check2(Event $event, Player $damager, Player $target): string
 	{
-		if(!$this->isActive() || PlayerUtil::combatInfluenced($damager)) return "";
+		if (!$this->isActive() || $this->getIgnored($damager) || PlayerUtil::combatInfluenced($damager)) return "";
 
 		$this->damagerPos = PlayerUtil::getPosition($damager);
 		$this->targetPos = PlayerUtil::getPosition($target);

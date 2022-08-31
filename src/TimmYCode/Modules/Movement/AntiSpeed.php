@@ -46,7 +46,7 @@ class AntiSpeed extends ModuleBase implements Module
 
 	public function checkMovement(Event $event, Player $player): String
 	{
-		if(!$this->isActive()) return "disabled";
+		if (!$this->isActive() || $this->getIgnored($player)) return "";
 
 		$this->jumpTickDifference = (ClientUtil::getServerTick() - PlayerUtil::getlastJumpServerTick($player));
 

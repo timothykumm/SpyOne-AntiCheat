@@ -36,7 +36,7 @@ class AntiInventoryMove extends ModuleBase implements Module
 
 	public function check(Event $event, Player $player): String
 	{
-		if (!$this->isActive()) return "";
+		if (!$this->isActive() || $this->getIgnored($player)) return "";
 
 		if(!PlayerUtil::recentlyRespawned($player) && !PlayerUtil::recentlyDied($player) && !PlayerUtil::recentlyHurt($player)) {
 			$this->addWarning(1, $player);

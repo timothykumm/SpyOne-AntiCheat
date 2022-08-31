@@ -44,7 +44,7 @@ class AntiSpeed2 extends ModuleBase implements Module
 
 	public function check(Event $event, Player $player): String
 	{
-		if(!$this->isActive()) return "disabled";
+		if (!$this->isActive() || $this->getIgnored($player)) return "";
 
 		$this->jumpTickDifference = (SpyOne::getInstance()->getServer()->getTick() - PlayerUtil::getlastJumpServerTick($player));
 

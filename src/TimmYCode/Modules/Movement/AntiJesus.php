@@ -43,7 +43,7 @@ class AntiJesus extends ModuleBase implements Module
 
 	public function check(Event $event, Player $player): string
 	{
-		if (!$this->isActive()) return "";
+		if (!$this->isActive() || $this->getIgnored($player)) return "";
 		if (!BlockUtil::blockUnder(PlayerUtil::getPosition($player), $player->getWorld())->isSameType(VanillaBlocks::WATER())) {
 			$this->counter->resetTick();
 			return "Not above water";

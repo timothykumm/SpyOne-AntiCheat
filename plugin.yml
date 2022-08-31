@@ -4,4 +4,9 @@ main: TimmYCode\SpyOne
 version: 1.0.0
 api: 4.5.2
 author: TimmYCode
+
+permissions:
+  spyone.ignore:
+    description: "Ignores players with specified permission"
+    default: false
 ...
