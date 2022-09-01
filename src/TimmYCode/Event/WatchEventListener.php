@@ -2,6 +2,7 @@
 
 namespace TimmYCode\Event;
 
+use TimmYCode\Config\ConfigManager;
 use TimmYCode\Modules\ModuleBase;
 use TimmYCode\SpyOne;
 use TimmYCode\Utils\ClientUtil;
@@ -17,7 +18,6 @@ class WatchEventListener implements Listener
 	public ModuleBase $moduleBase;
 
 	public function onJoin(PlayerJoinEvent $event) {
-
 		$this->moduleBase = new ModuleBase();
 		$this->moduleBase->loadModules(true);
 

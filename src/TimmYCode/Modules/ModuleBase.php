@@ -3,6 +3,7 @@
 namespace TimmYCode\Modules;
 
 use pocketmine\event\Event;
+use TimmYCode\Config\ConfigManager;
 use TimmYCode\Modules\Combat\AntiAutoClicker;
 use TimmYCode\Modules\Combat\AntiKillaura;
 use TimmYCode\Modules\Combat\AntiNoKnockback;
@@ -11,24 +12,25 @@ use TimmYCode\Modules\Movement\AntiAirJump;
 use TimmYCode\Modules\Movement\AntiGlide;
 use TimmYCode\Modules\Movement\AntiHighJump;
 use TimmYCode\Modules\Movement\AntiJesus;
-use TimmYCode\Modules\Movement\AntiSpeed;
-use TimmYCode\Modules\Movement\AntiSpeed2;
+use TimmYCode\Modules\Movement\AntiSpeedA;
+use TimmYCode\Modules\Movement\AntiSpeedB;
 use TimmYCode\Modules\Movement\AntiStep;
 use TimmYCode\Modules\Other\AntiAutoArmor;
 use TimmYCode\Modules\Other\AntiInventoryMove;
+use TimmYCode\Punishment\Notification;
 use TimmYCode\Utils\PlayerUtil;
 use pocketmine\player\Player;
 
 class ModuleBase
 {
-	private bool $active = true;
+	private bool $active = false;
 	private array $modules = array();
 	private int $warnings = 0;
 
 	public function loadModules(bool $setup): void {
 		$this->modules = array(
-			"AntiSpeed" => new AntiSpeed(),
-			"AntiSpeed2" => new AntiSpeed2(),
+			"AntiSpeedA" => new AntiSpeedA(),
+			"AntiSpeedB" => new AntiSpeedB(),
 			"AntiHighJump" => new AntiHighJump(),
 			"AntiStep" => new AntiStep(),
 			"AntiGlide" => new AntiGlide(),
@@ -47,7 +49,10 @@ class ModuleBase
 
 	public function setupModules(): void {
 		foreach ($this->modules as $key => $module){
-			$module->setup();
+			if(ConfigManager::getModuleConfiguration($module->getName())["enable"]) {
+				$module->activate();
+				$module->setup();
+			}
 		}
 	}
 
@@ -84,6 +89,7 @@ class ModuleBase
 			if($module->warningLimit() <= $this->warnings) {
 				$module->punishment()->fire($player);
 				$module->resetWarning();
+				if(ConfigManager::getModuleConfiguration($module->getName())["notify"]) new Notification($player, $module->getName());
 			}
 	}
 
@@ -103,11 +109,11 @@ class ModuleBase
 		if(!PlayerUtil::recentlyRespawned($player)) $this->warnings += $warning;
 	}
 
-	public function check(Event $event, Player $player) : String {
+	public function checkA(Event $event, Player $player) : String {
 		return "";
 	}
 
-	public function check2(Event $event, Player $player, Player $target) : String {
+	public function checkB(Event $event, Player $player, Player $target) : String {
 		return "";
 	}
 

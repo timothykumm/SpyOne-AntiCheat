@@ -3,11 +3,11 @@
 namespace TimmYCode\Event;
 
 use pocketmine\event\Listener;
+use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\event\server\DataPacketSendEvent;
 use TimmYCode\Event\Custom\ContainerCloseEvent;
 use TimmYCode\Event\Custom\ContainerOpenEvent;
 use TimmYCode\Event\Custom\InventoryContentChangeEvent;
-use TimmYCode\SpyOne;
 use TimmYCode\Utils\PlayerUtil;
 
 class CallCustomEvents implements Listener
@@ -46,5 +46,11 @@ class CallCustomEvents implements Listener
 			}*/
 		}
 	}
+
+	/*public function receivedPackagesListener(DataPacketReceiveEvent $event) {
+		if(!str_ends_with(get_class($event->getPacket()), "PlayerAuthInputPacket")) {
+			SpyOne::getInstance()->getServer()->broadcastMessage(get_class($event->getPacket()));
+		}
+	}*/
 
 }

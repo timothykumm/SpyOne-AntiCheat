@@ -3,9 +3,10 @@
 namespace TimmYCode\Modules\Movement;
 
 use pocketmine\event\Event;
+use TimmYCode\Config\ConfigManager;
 use TimmYCode\Modules\ModuleBase;
 use TimmYCode\Modules\Module;
-use TimmYCode\Punishment\Methods\Message;
+use TimmYCode\Punishment\Methods\Notification;
 use TimmYCode\Punishment\Punishment;
 use TimmYCode\Utils\ClientUtil;
 use TimmYCode\Utils\PlayerUtil;
@@ -14,7 +15,6 @@ use pocketmine\player\Player;
 
 class AntiAirJump extends ModuleBase implements Module
 {
-
 	private TickUtil $counter;
 	private float $jumpDistanceY = 0.42;
 	private float $from = 0.0, $to = 0.0;
@@ -31,7 +31,7 @@ class AntiAirJump extends ModuleBase implements Module
 
 	public function punishment(): Punishment
 	{
-		return new Message("Air Jump detected");
+		return ConfigManager::getPunishment($this->getName());
 	}
 
 	public function setup(): void
@@ -39,7 +39,7 @@ class AntiAirJump extends ModuleBase implements Module
 		$this->counter = new TickUtil(0);
 	}
 
-	public function check(Event $event, Player $player): String
+	public function checkA(Event $event, Player $player): String
 	{
 		if (!$this->isActive() || $this->getIgnored($player)) return "";
 

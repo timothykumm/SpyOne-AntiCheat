@@ -1,0 +1,73 @@
+---
+# enable - if you want to en- or disable a module
+# notify - if you want admins to get notified
+# punishment - nothing (Player receives no punishment), warning (Player receives warning), kick (Player gets kicked), ban (Player gets banned), transfer (Player gets transfered to another server)
+# message - warn, kick or ban message
+spyone:
+  modules:
+    autoclicker:
+      enable: true
+      notify: true
+      punishment: warn
+      message: "SpyOne caught you cheating"
+    killaura:
+      enable: true
+      notify: true
+      punishment: warn
+      message: "SpyOne caught you cheating"
+    noknockback:
+      enable: true
+      notify: true
+      punishment: warn
+      message: "SpyOne caught you cheating"
+    reach:
+      enable: true
+      notify: true
+      punishment: warn
+      message: "SpyOne caught you cheating"
+    airjump:
+      enable: true
+      notify: true
+      punishment: warn
+      message: "SpyOne caught you cheating"
+    glide:
+      enable: true
+      notify: true
+      punishment: warn
+      message: "SpyOne caught you cheating"
+    highjump:
+      enable: true
+      notify: true
+      punishment: warn
+      message: "SpyOne caught you cheating"
+    jesus:
+      enable: true
+      notify: true
+      punishment: warn
+      message: "SpyOne caught you cheating"
+    speeda: #onground speed
+      enable: true
+      notify: true
+      punishment: warn
+      message: "SpyOne caught you cheating"
+    speedb: #offground speed
+      enable: true
+      notify: true
+      punishment: warn
+      message: "SpyOne caught you cheating"
+    step:
+      enable: true
+      notify: true
+      punishment: warn
+      message: "SpyOne caught you cheating"
+    autoarmor:
+      enable: true
+      notify: true
+      punishment: warn
+      message: "SpyOne caught you cheating"
+    inventorymove:
+      enable: true
+      notify: true
+      punishment: warn
+      message: "SpyOne caught you cheating"
+...

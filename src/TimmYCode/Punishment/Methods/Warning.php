@@ -3,10 +3,10 @@
 namespace TimmYCode\Punishment\Methods;
 
 use TimmYCode\Punishment\Punishment;
-use pocketmine\permission\BanEntry;
+use TimmYCode\SpyOne;
 use pocketmine\player\Player;
 
-class Ban implements Punishment
+class Warning implements Punishment
 {
 
 	private String $reason;
@@ -17,8 +17,7 @@ class Ban implements Punishment
 
 	function fire(Player $player): void
 	{
-		$player->getServer()->getNameBans()->add(new BanEntry($player->getName()));
-		$player->kick($this->reason);
+		$player->sendMessage(SpyOne::PREFIX . $this->reason);
 	}
 
 }

@@ -9,4 +9,7 @@ permissions:
   spyone.ignore:
     description: "Ignores players with specified permission"
     default: false
+  spyone.notify:
+    description: "Get a notification if player is accused of cheating"
+    default: false
 ...

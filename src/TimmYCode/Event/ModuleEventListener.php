@@ -24,14 +24,14 @@ class ModuleEventListener implements Listener
 		$playerIndex = ClientUtil::playerExistsInArray($player, WatchEventListener::$spyOnePlayerList);
 
 		if ($playerIndex == -1) return;
-		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiStep")->check($event, $player);
-		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiSpeed")->check($event, $player);
-		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiSpeed2")->check($event, $player);
-		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiHighJump")->check($event, $player);
-		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiGlide")->check($event, $player);
-		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiNoKnockback")->check($event, $player);
-		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiJesus")->check($event, $player);
-		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiAirJump")->check($event, $player);
+		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiStep")->checkA($event, $player);
+		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiSpeedA")->checkA($event, $player);
+		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiSpeedB")->checkA($event, $player);
+		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiHighJump")->checkA($event, $player);
+		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiGlide")->checkA($event, $player);
+		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiNoKnockback")->checkA($event, $player);
+		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiJesus")->checkA($event, $player);
+		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiAirJump")->checkA($event, $player);
 
 	}
 
@@ -43,7 +43,7 @@ class ModuleEventListener implements Listener
 
 		if (PlayerUtil::isPlayer($target->getNameTag(), $target->getId())) {
 			$targetToPlayer = PlayerUtil::entityToPlayer($target->getNameTag(), $target->getId());
-			PlayerUtil::addlastDamageCausedByEntityServerTick(PlayerUtil::entityToPlayer($target->getNameTag(), $target->getId()), SpyOne::getInstance()->getServer()->getTick());
+			PlayerUtil::addlastDamageCausedByEntityServerTick(PlayerUtil::entityToPlayer($target->getNameTag(), $target->getId()), ClientUtil::getServerTick());
 
 			if (PlayerUtil::isPlayer($damager->getNameTag(), $damager->getId())) {
 				$damagerToPlayer = PlayerUtil::entityToPlayer($damager->getNameTag(), $damager->getId());
@@ -54,15 +54,15 @@ class ModuleEventListener implements Listener
 				$event->setAttackCooldown(0);
 				$modifiedCooldown = ClientUtil::getServerTick() - PlayerUtil::getlastDamageCausedByPlayerServerTick($damagerToPlayer);
 
-				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiReach")->check2($event, $damagerToPlayer, $targetToPlayer);
-				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiKillaura")->check2($event, $damagerToPlayer, $targetToPlayer);
-				//WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiAutoClicker")->checkCombat($event, $damagerToPlayer, $targetToPlayer);
+				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiReach")->checkB($event, $damagerToPlayer, $targetToPlayer);
+				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiKillaura")->checkB($event, $damagerToPlayer, $targetToPlayer);
+				//WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiAutoClicker")->checkB($event, $damagerToPlayer, $targetToPlayer);
 
 				if ($modifiedCooldown < $actualCooldown) {
 					$event->cancel();
 				} else {
 					PlayerUtil::addlastDamageCausedByPlayerServerTick($damagerToPlayer, SpyOne::getInstance()->getServer()->getTick());
-					$output = WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiNoKnockback")->check2($event, $damagerToPlayer, $targetToPlayer);
+					$output = WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiNoKnockback")->checkB($event, $damagerToPlayer, $targetToPlayer);
 					//$output != "" ?? $damagerToPlayer->sendMessage($output);
 				}
 
@@ -97,7 +97,7 @@ class ModuleEventListener implements Listener
 
 		PlayerUtil::addlastInventoryContentChange($player, ClientUtil::getServerTick(), 1);
 		if(PlayerUtil::getlastInventoryContentChangeTick($player) > 4) {
-			WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiAutoArmor")->check($event, $player);
+			WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiAutoArmor")->checkA($event, $player);
 		}
 	}
 
@@ -111,7 +111,7 @@ class ModuleEventListener implements Listener
 
 			if (BlockUtil::calculateDistanceWithY(PlayerUtil::getlastInventoryOpenPos($playerXuid), PlayerUtil::getPosition($player)) > 4) {
 				//$player->sendMessage("Distance: " . BlockUtil::calculateDistance(PlayerUtil::getlastInventoryOpenPos($playerXuid), PlayerUtil::getPosition($player)));
-				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiInventoryMove")->check($event, $player);
+				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiInventoryMove")->checkA($event, $player);
 			}
 
 			PlayerUtil::addlastInventoryOpenPos($playerXuid, array());

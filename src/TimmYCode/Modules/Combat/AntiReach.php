@@ -3,9 +3,10 @@
 namespace TimmYCode\Modules\Combat;
 
 use pocketmine\event\Event;
+use TimmYCode\Config\ConfigManager;
 use TimmYCode\Modules\ModuleBase;
 use TimmYCode\Modules\Module;
-use TimmYCode\Punishment\Methods\Message;
+use TimmYCode\Punishment\Methods\Notification;
 use TimmYCode\Punishment\Punishment;
 use TimmYCode\Utils\BlockUtil;
 use TimmYCode\Utils\PlayerUtil;
@@ -29,7 +30,7 @@ class AntiReach extends ModuleBase implements Module
 
 	public function punishment(): Punishment
 	{
-		return new Message("Reach detected");
+		return ConfigManager::getPunishment($this->getName());
 	}
 
 	public function setup(): void
@@ -37,7 +38,7 @@ class AntiReach extends ModuleBase implements Module
 
 	}
 
-	public function check2(Event $event, Player $damager, Player $target): string
+	public function checkB(Event $event, Player $damager, Player $target): string
 	{
 		if (!$this->isActive() || $this->getIgnored($damager) || PlayerUtil::combatInfluenced($damager)) return "";
 

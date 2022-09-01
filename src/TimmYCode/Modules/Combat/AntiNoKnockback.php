@@ -3,9 +3,10 @@
 namespace TimmYCode\Modules\Combat;
 
 use pocketmine\event\Event;
+use TimmYCode\Config\ConfigManager;
 use TimmYCode\Modules\ModuleBase;
 use TimmYCode\Modules\Module;
-use TimmYCode\Punishment\Methods\Message;
+use TimmYCode\Punishment\Methods\Notification;
 use TimmYCode\Punishment\Punishment;
 use TimmYCode\Utils\PlayerUtil;
 use TimmYCode\Utils\TickUtil;
@@ -31,7 +32,7 @@ class AntiNoKnockback extends ModuleBase implements Module
 
 	public function punishment(): Punishment
 	{
-		return new Message("NoKnockback detected");
+		return ConfigManager::getPunishment($this->getName());
 	}
 
 	public function setup(): void
@@ -39,9 +40,9 @@ class AntiNoKnockback extends ModuleBase implements Module
 		$this->counter = new TickUtil(0);
 	}
 
-	public function check2(Event $event, Player $damager, Player $target): string
+	public function checkB(Event $event, Player $damager, Player $target): string
 	{
-		if (!$this->isActive() || $this->getIgnored($player)) return "";
+		if (!$this->isActive() || $this->getIgnored($damager)) return "";
 		$this->checkAndFirePunishment($this, $damager);
 
 		$this->target = $target;
@@ -50,7 +51,7 @@ class AntiNoKnockback extends ModuleBase implements Module
 		return "";
 	}
 
-	public function check(Event $event, Player $player): String
+	public function checkA(Event $event, Player $player): String
 	{
 		if(!$this->checkMov) {
 			$this->checkMov = false;

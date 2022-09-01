@@ -3,9 +3,10 @@
 namespace TimmYCode\Modules\Combat;
 
 use pocketmine\event\Event;
+use TimmYCode\Config\ConfigManager;
 use TimmYCode\Modules\ModuleBase;
 use TimmYCode\Modules\Module;
-use TimmYCode\Punishment\Methods\Message;
+use TimmYCode\Punishment\Methods\Notification;
 use TimmYCode\Punishment\Punishment;
 use TimmYCode\Utils\PlayerUtil;
 use pocketmine\player\Player;
@@ -26,7 +27,7 @@ class AntiKillaura extends ModuleBase implements Module
 
 	public function punishment(): Punishment
 	{
-		return new Message("Killaura detected");
+		return ConfigManager::getPunishment($this->getName());
 	}
 
 	public function setup(): void
@@ -34,9 +35,9 @@ class AntiKillaura extends ModuleBase implements Module
 
 	}
 
-	public function check2(Event $event, Player $damager, Player $target): string
+	public function checkB(Event $event, Player $damager, Player $target): string
 	{
-		if (!$this->isActive() || $this->getIgnored($player)) return "";
+		if (!$this->isActive() || $this->getIgnored($damager)) return "";
 
 		$posFoot = $damager->getPosition()->asVector3();
 		$posHead = $damager->getEyePos()->asVector3();

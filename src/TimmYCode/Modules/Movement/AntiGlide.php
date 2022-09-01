@@ -3,9 +3,10 @@
 namespace TimmYCode\Modules\Movement;
 
 use pocketmine\event\Event;
+use TimmYCode\Config\ConfigManager;
 use TimmYCode\Modules\ModuleBase;
 use TimmYCode\Modules\Module;
-use TimmYCode\Punishment\Methods\Message;
+use TimmYCode\Punishment\Methods\Notification;
 use TimmYCode\Punishment\Punishment;
 use TimmYCode\Utils\BlockUtil;
 use TimmYCode\Utils\PlayerUtil;
@@ -15,7 +16,6 @@ use pocketmine\player\Player;
 
 class AntiGlide extends ModuleBase implements Module
 {
-
 	private TickUtil $counter, $glideCounter;
 	private float $from = 0.0, $to = 0.0, $fallDistance = 0.0, $previousFallDistance = -9693;
 	private float $deviation = 0.001;
@@ -32,7 +32,7 @@ class AntiGlide extends ModuleBase implements Module
 
 	public function punishment(): Punishment
 	{
-		return new Message("Glide detected");
+		return ConfigManager::getPunishment($this->getName());
 	}
 
 	public function setup(): void
@@ -41,7 +41,7 @@ class AntiGlide extends ModuleBase implements Module
 		$this->glideCounter = new TickUtil(0);
 	}
 
-	public function check(Event $event, Player $player): String
+	public function checkA(Event $event, Player $player): String
 	{
 		if (!$this->isActive() || $this->getIgnored($player)) return "";
 

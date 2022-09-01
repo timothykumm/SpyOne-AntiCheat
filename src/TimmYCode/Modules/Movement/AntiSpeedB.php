@@ -3,9 +3,10 @@
 namespace TimmYCode\Modules\Movement;
 
 use pocketmine\event\Event;
+use TimmYCode\Config\ConfigManager;
 use TimmYCode\Modules\ModuleBase;
 use TimmYCode\Modules\Module;
-use TimmYCode\Punishment\Methods\Message;
+use TimmYCode\Punishment\Methods\Notification;
 use TimmYCode\Punishment\Punishment;
 use TimmYCode\SpyOne;
 use TimmYCode\Utils\BlockUtil;
@@ -14,9 +15,8 @@ use TimmYCode\Utils\TickUtil;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\player\Player;
 
-class AntiSpeed2 extends ModuleBase implements Module
+class AntiSpeedB extends ModuleBase implements Module
 {
-
 	private TickUtil $counter;
 	private array $from = array(), $to= array();
 	private float $distance = -1412.0, $distancePerTickAllowed = 0.39;
@@ -24,7 +24,7 @@ class AntiSpeed2 extends ModuleBase implements Module
 
 	public function getName() : String
 	{
-		return "AntiSpeed";
+		return "AntiSpeedB";
 	}
 
 	public function warningLimit(): int
@@ -34,7 +34,7 @@ class AntiSpeed2 extends ModuleBase implements Module
 
 	public function punishment(): Punishment
 	{
-		return new Message("OffGround Speed detected");
+		return ConfigManager::getPunishment($this->getName());
 	}
 
 	public function setup(): void
@@ -42,7 +42,7 @@ class AntiSpeed2 extends ModuleBase implements Module
 		$this->counter = new TickUtil(0);
 	}
 
-	public function check(Event $event, Player $player): String
+	public function checkA(Event $event, Player $player): String
 	{
 		if (!$this->isActive() || $this->getIgnored($player)) return "";
 

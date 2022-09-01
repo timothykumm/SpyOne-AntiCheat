@@ -3,9 +3,10 @@
 namespace TimmYCode\Modules\Movement;
 
 use pocketmine\event\Event;
+use TimmYCode\Config\ConfigManager;
 use TimmYCode\Modules\ModuleBase;
 use TimmYCode\Modules\Module;
-use TimmYCode\Punishment\Methods\Message;
+use TimmYCode\Punishment\Methods\Notification;
 use TimmYCode\Punishment\Punishment;
 use TimmYCode\Utils\BlockUtil;
 use TimmYCode\Utils\PlayerUtil;
@@ -33,7 +34,7 @@ class AntiJesus extends ModuleBase implements Module
 
 	public function punishment(): Punishment
 	{
-		return new Message("Jesus detected");
+		return ConfigManager::getPunishment($this->getName());
 	}
 
 	public function setup(): void
@@ -41,7 +42,7 @@ class AntiJesus extends ModuleBase implements Module
 		$this->counter = new TickUtil(0);
 	}
 
-	public function check(Event $event, Player $player): string
+	public function checkA(Event $event, Player $player): string
 	{
 		if (!$this->isActive() || $this->getIgnored($player)) return "";
 		if (!BlockUtil::blockUnder(PlayerUtil::getPosition($player), $player->getWorld())->isSameType(VanillaBlocks::WATER())) {
