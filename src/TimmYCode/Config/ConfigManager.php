@@ -16,6 +16,10 @@ class ConfigManager
 		return SpyOne::getInstance()->getConfig()->getAll()["spyone"]["modules"][strtolower(substr($moduleName, 4))];
 	}
 
+	static function getWebhookConfiguration() : array {
+		return SpyOne::getInstance()->getConfig()->getAll()["spyone"]["discord"];
+	}
+
 	static function getPunishment(String $moduleName): Punishment {
 		$punishment = SpyOne::getInstance()->getConfig()->getAll()["spyone"]["modules"][strtolower(substr($moduleName, 4))]["punishment"];
 		$message = SpyOne::getInstance()->getConfig()->getAll()["spyone"]["modules"][strtolower(substr($moduleName, 4))]["message"];

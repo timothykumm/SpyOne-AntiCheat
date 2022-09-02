@@ -4,6 +4,7 @@ namespace TimmYCode\Modules;
 
 use pocketmine\event\Event;
 use TimmYCode\Config\ConfigManager;
+use TimmYCode\Discord\Webhook;
 use TimmYCode\Modules\Combat\AntiAutoClicker;
 use TimmYCode\Modules\Combat\AntiKillaura;
 use TimmYCode\Modules\Combat\AntiNoKnockback;
@@ -18,6 +19,7 @@ use TimmYCode\Modules\Movement\AntiStep;
 use TimmYCode\Modules\Other\AntiAutoArmor;
 use TimmYCode\Modules\Other\AntiInventoryMove;
 use TimmYCode\Punishment\Notification;
+use TimmYCode\SpyOne;
 use TimmYCode\Utils\PlayerUtil;
 use pocketmine\player\Player;
 
@@ -88,9 +90,21 @@ class ModuleBase
 	public function checkAndFirePunishment(Module $module, Player $player): void {
 			if($module->warningLimit() <= $this->warnings) {
 				$module->punishment()->fire($player);
+				$this->sendNotifications($module, $player);
 				$module->resetWarning();
-				if(ConfigManager::getModuleConfiguration($module->getName())["notify"]) new Notification($player, $module->getName());
 			}
+	}
+
+	private function sendNotifications(Module $module, Player $player): void
+	{
+		if(ConfigManager::getWebhookConfiguration()["enable"]) {
+			if(ConfigManager::getWebhookConfiguration()["webhook"] != "") {
+				SpyOne::getInstance()->getServer()->getAsyncPool()->submitTask(new Webhook($player->getNameTag(), $module->getName(), PlayerUtil::getPing($player)));
+			}else{
+				SpyOne::getInstance()->getLogger()->info("You need to set the weebhook url");
+			}
+		}
+		if(ConfigManager::getModuleConfiguration($module->getName())["notify"]) new Notification($player, $module->getName());
 	}
 
 	public function getWarning() : int {

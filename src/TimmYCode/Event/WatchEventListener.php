@@ -2,7 +2,6 @@
 
 namespace TimmYCode\Event;
 
-use TimmYCode\Config\ConfigManager;
 use TimmYCode\Modules\ModuleBase;
 use TimmYCode\SpyOne;
 use TimmYCode\Utils\ClientUtil;
