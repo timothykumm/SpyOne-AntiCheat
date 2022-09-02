@@ -59,10 +59,11 @@ class AntiHighJump extends ModuleBase implements Module
 		$distance = ($this->to - $this->from);
 
 		if($distance > $this->maxDistanceY) {
-			if(!$player->isOnGround() && (ClientUtil::getServerTick() - PlayerUtil::getlastDamageCausedByEntityServerTick($player)) > 5)
-			$this->addWarning(1, $player);
-			$this->checkAndFirePunishment($this, $player);
-			return "Jumped too high";
+			if(!$player->isOnGround() && !PlayerUtil::recentlyHurt($player) && !PlayerUtil::recentlyRespawned($player)) {
+				$this->addWarning(1, $player);
+				$this->checkAndFirePunishment($this, $player);
+				return "Jumped too high";
+			}
 		}
 
 		return "DistanceY " . $distance;

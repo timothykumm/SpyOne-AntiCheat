@@ -52,7 +52,7 @@ class AntiStep extends ModuleBase implements Module
 		$this->to = PlayerUtil::getY($player);
 		$this->counter->resetTick();
 		if(($this->to - $this->from) >= $this->maxStep) {
-			if($player->isOnGround() && !PlayerUtil::recentlyHurt($player)) {
+			if($player->isOnGround() && !PlayerUtil::recentlyHurt($player) && !PlayerUtil::recentlyRespawned($player)) {
 				if(!PlayerUtil::stepsInfluenced($player)) {
 					$this->addWarning(1, $player);
 					$this->checkAndFirePunishment($this, $player);

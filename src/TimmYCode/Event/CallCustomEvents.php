@@ -8,6 +8,7 @@ use pocketmine\event\server\DataPacketSendEvent;
 use TimmYCode\Event\Custom\ContainerCloseEvent;
 use TimmYCode\Event\Custom\ContainerOpenEvent;
 use TimmYCode\Event\Custom\InventoryContentChangeEvent;
+use TimmYCode\SpyOne;
 use TimmYCode\Utils\PlayerUtil;
 
 class CallCustomEvents implements Listener

@@ -59,10 +59,11 @@ class AntiAirJump extends ModuleBase implements Module
 		$distance = ($this->to - $this->from);
 
 		if($distance < $this->jumpDistanceY + 0.02 && $distance > $this->jumpDistanceY - 0.02) {
-			if(!$player->isOnGround() && (ClientUtil::getServerTick() - PlayerUtil::getlastDamageCausedByEntityServerTick($player)) > 5 && $player->getInAirTicks() > 4)
+			if(!$player->isOnGround() && !PlayerUtil::recentlyHurt($player) && !PlayerUtil::recentlyRespawned($player)) {
 				$this->addWarning(1, $player);
-			$this->checkAndFirePunishment($this, $player);
-			return "Jumped mid air";
+				$this->checkAndFirePunishment($this, $player);
+				return "Jumped mid air";
+			}
 		}
 
 		return "DistanceY " . $distance;
