@@ -77,10 +77,11 @@ class PlayerUtil
 
 	static function knockbackInfluenced(Player $player): bool
 	{
-		return ($player->isFlying() || $player->isCreative() || $player->isGliding() || $player->isInsideOfSolid() ||
+		return ($player->isFlying() || $player->isCreative() || $player->isGliding() || $player->isInsideOfSolid() || $player->isUnderwater() ||
 			BlockUtil::blockAroundBlock(PlayerUtil::getPosition($player), $player->getWorld(), 2, 2, 2, VanillaBlocks::COBWEB())
-			|| BlockUtil::blockAroundBlock(PlayerUtil::getPosition($player), $player->getWorld(), 1, 1, 1 ,VanillaBlocks::LADDER())
-				|| $player->isUnderwater() || BlockUtil::blockUnder(self::getPosition($player), $player->getWorld())->isSameType(VanillaBlocks::WATER()));
+			|| BlockUtil::blockAroundBlock(PlayerUtil::getPosition($player), $player->getWorld(), 1, 1, 1, VanillaBlocks::LADDER())
+				|| BlockUtil::blockUnder(self::getPosition($player), $player->getWorld())->isSameType(VanillaBlocks::WATER())
+					|| BlockUtil::noBlockAroundBlock(array(PlayerUtil::getX($player), PlayerUtil::getY($player)+2, PlayerUtil::getZ($player)), $player->getWorld(), 1, 1, 1, VanillaBlocks::AIR()));
 	}
 
 	static function isJumping(Player $player): bool

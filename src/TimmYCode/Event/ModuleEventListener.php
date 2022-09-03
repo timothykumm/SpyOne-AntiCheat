@@ -2,6 +2,7 @@
 
 namespace TimmYCode\Event;
 
+use pocketmine\block\VanillaBlocks;
 use TimmYCode\Event\Custom\ContainerCloseEvent;
 use TimmYCode\Event\Custom\ContainerOpenEvent;
 use TimmYCode\Event\Custom\InventoryContentChangeEvent;

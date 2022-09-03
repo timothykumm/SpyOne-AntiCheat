@@ -3,6 +3,7 @@
 namespace TimmYCode\Utils;
 
 use pocketmine\block\Block;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\world\World;
 
 class BlockUtil
@@ -34,6 +35,20 @@ class BlockUtil
 			for($y=$vector1[1]-$searchRadiusY; $y < $vector1[1]+$searchRadiusY; $y++) {
 				for($z=$vector1[2]-$searchRadiusZ; $z < $vector1[2]+$searchRadiusZ; $z++) {
 					if($world->getBlockAt($x, $y, $z)->isSameType($block)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	static function noBlockAroundBlock(array $vector1, World $world, int $searchRadiusX, int $searchRadiusY, int $searchRadiusZ, Block $block): bool
+	{
+		for($x=$vector1[0]-$searchRadiusX; $x < $vector1[0]+$searchRadiusX; $x++) {
+			for($y=$vector1[1]-$searchRadiusY; $y < $vector1[1]+$searchRadiusY; $y++) {
+				for($z=$vector1[2]-$searchRadiusZ; $z < $vector1[2]+$searchRadiusZ; $z++) {
+					if(!$world->getBlockAt($x, $y, $z)->isSameType($block)) {
 						return true;
 					}
 				}

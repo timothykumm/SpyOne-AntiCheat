@@ -2,12 +2,14 @@
 
 namespace TimmYCode\Modules\Combat;
 
+use pocketmine\block\Block;
 use pocketmine\event\Event;
 use TimmYCode\Config\ConfigManager;
 use TimmYCode\Modules\ModuleBase;
 use TimmYCode\Modules\Module;
 use TimmYCode\Punishment\Methods\Notification;
 use TimmYCode\Punishment\Punishment;
+use TimmYCode\Utils\BlockUtil;
 use TimmYCode\Utils\PlayerUtil;
 use TimmYCode\Utils\TickUtil;
 use pocketmine\player\Player;
