@@ -10,7 +10,7 @@ use pocketmine\player\Player;
 class PlayerUtil
 {
 
-	private static array $damageCausedByEntityServerTick = array(), $damageCausedByPlayerServerTick = array(), $jumpServerTick = array(), $deathServerTick = array(), $respawnServerTick = array(), $jumpPosition = array(), $inventoryContentChanged = array();
+	private static array $damageCausedByEntityServerTick = array(), $damageCausedByPlayerServerTick = array(), $jumpServerTick = array(), $deathServerTick = array(), $respawnServerTick = array(), $notificationServerTick = array(), $jumpPosition = array(), $inventoryContentChanged = array();
 
 	//InventoryWalk var
 	private static array $inventoryTransactionPickPos = array();
@@ -149,6 +149,12 @@ class PlayerUtil
 		$playerPositionInArray != -1 ? self::$respawnServerTick[$player->getXuid()] = $serverTick : self::$respawnServerTick += [$player->getXuid() => $serverTick];
 	}
 
+	static function addlastNotificationServerTick(Player $player, int $serverTick): void
+	{
+		$playerPositionInArray = ClientUtil::playerXuidExistsInArray($player->getXuid(), self::$notificationServerTick);
+		$playerPositionInArray != -1 ? self::$notificationServerTick[$player->getXuid()] = $serverTick : self::$notificationServerTick += [$player->getXuid() => $serverTick];
+	}
+
 	static function addlastInventoryContentChange(Player $player, int $serverTick, int $count): void
 	{
 		$playerPositionInArray = ClientUtil::playerXuidExistsInArray($player->getXuid(), self::$inventoryContentChanged);
@@ -210,6 +216,12 @@ class PlayerUtil
 	static function getlastRespawnServerTick(Player $player): int
 	{
 		$serverTick =  ClientUtil::getValueOfArray(self::$respawnServerTick, $player->getXuid());
+		return $serverTick != null ? $serverTick : 0;
+	}
+
+	static function getlastNotificationServerTick(Player $player): int
+	{
+		$serverTick =  ClientUtil::getValueOfArray(self::$notificationServerTick, $player->getXuid());
 		return $serverTick != null ? $serverTick : 0;
 	}
 

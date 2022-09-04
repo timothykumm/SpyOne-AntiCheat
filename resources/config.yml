@@ -30,6 +30,11 @@ spyone:
       notify: true
       punishment: warn
       message: "SpyOne caught you cheating"
+    fly:
+      enable: true
+      notify: true
+      punishment: warn
+      message: "SpyOne caught you cheating"
     glide:
       enable: true
       notify: true

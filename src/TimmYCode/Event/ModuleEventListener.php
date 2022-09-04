@@ -33,6 +33,7 @@ class ModuleEventListener implements Listener
 		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiNoKnockback")->checkA($event, $player);
 		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiJesus")->checkA($event, $player);
 		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiAirJump")->checkA($event, $player);
+		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiFly")->checkA($event, $player);
 	}
 
 	public function onDamage(EntityDamageByEntityEvent $event)

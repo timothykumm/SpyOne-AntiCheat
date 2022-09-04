@@ -18,7 +18,7 @@ class WatchEventListener implements Listener
 
 	public function onJoin(PlayerJoinEvent $event) {
 		$this->moduleBase = new ModuleBase();
-		$this->moduleBase->loadModules(true);
+		$this->moduleBase->registerModules(true);
 
 		self::$spyOnePlayerList += [$event->getPlayer()->getXuid() => $event->getPlayer()];
 		self::$spyOnePlayerModuleList[] = $this->moduleBase;

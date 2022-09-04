@@ -10,6 +10,7 @@ use TimmYCode\Modules\Combat\AntiKillaura;
 use TimmYCode\Modules\Combat\AntiNoKnockback;
 use TimmYCode\Modules\Combat\AntiReach;
 use TimmYCode\Modules\Movement\AntiAirJump;
+use TimmYCode\Modules\Movement\AntiFly;
 use TimmYCode\Modules\Movement\AntiGlide;
 use TimmYCode\Modules\Movement\AntiHighJump;
 use TimmYCode\Modules\Movement\AntiJesus;
@@ -20,6 +21,7 @@ use TimmYCode\Modules\Other\AntiAutoArmor;
 use TimmYCode\Modules\Other\AntiInventoryMove;
 use TimmYCode\Punishment\Notification;
 use TimmYCode\SpyOne;
+use TimmYCode\Utils\ClientUtil;
 use TimmYCode\Utils\PlayerUtil;
 use pocketmine\player\Player;
 
@@ -27,9 +29,9 @@ class ModuleBase
 {
 	private bool $active = false;
 	private array $modules = array();
-	private int $warnings = 0;
+	private int $warnings = 0, $notificationCooldown = 30;
 
-	public function loadModules(bool $setup): void {
+	public function registerModules(bool $setup): void {
 		$this->modules = array(
 			"AntiSpeedA" => new AntiSpeedA(),
 			"AntiSpeedB" => new AntiSpeedB(),
@@ -42,6 +44,7 @@ class ModuleBase
 			"AntiAutoClicker" => new AntiAutoClicker(),
 			"AntiJesus" => new AntiJesus(),
 			"AntiAirJump" => new AntiAirJump(),
+			"AntiFly" => new AntiFly(),
 			"AntiInventoryMove" => new AntiInventoryMove(),
 			"AntiAutoArmor" => new AntiAutoArmor()
 		);
@@ -97,6 +100,9 @@ class ModuleBase
 
 	private function sendNotifications(Module $module, Player $player): void
 	{
+		if(PlayerUtil::getlastNotificationServerTick($player) + $this->notificationCooldown >= ClientUtil::getServerTick()) return;
+
+		PlayerUtil::addlastNotificationServerTick($player, ClientUtil::getServerTick());
 		if(ConfigManager::getWebhookConfiguration()["enable"]) {
 			if(ConfigManager::getWebhookConfiguration()["webhook"] != "") {
 				SpyOne::getInstance()->getServer()->getAsyncPool()->submitTask(new Webhook($player->getNameTag(), $module->getName(), PlayerUtil::getPing($player)));

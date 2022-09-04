@@ -16,7 +16,7 @@ class AntiReach extends ModuleBase implements Module
 {
 
 	private array $damagerPos = array(), $targetPos = array();
-	private float $distance = 0.0, $distanceAllowed = 4.45;
+	private float $distance = 0.0, $distanceAllowed = 4.45, $distanceAllowedKnockback = 4.7;
 
 	public function getName() : String
 	{
@@ -47,11 +47,10 @@ class AntiReach extends ModuleBase implements Module
 		$this->distance = BlockUtil::calculateDistance($this->damagerPos, $this->targetPos);
 
 
-		if($this->distance > $this->distanceAllowed) {
+		if(($this->distance > $this->distanceAllowed && $target->getInAirTicks() <= 0) || ($this->distance > $this->distanceAllowedKnockback && $target->getInAirTicks() > 0)) {
 			$this->addWarning(1, $damager);
 			$this->checkAndFirePunishment($this, $damager);
-			$damager->sendMessage($this->distance);
-			return "Hit too far " . $this->distance;
+			return "Reach?";
 		}
 		return "";
 	}
