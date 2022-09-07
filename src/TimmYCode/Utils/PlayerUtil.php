@@ -60,7 +60,7 @@ class PlayerUtil
 
 	static function flyingInfluenced(Player $player): bool
 	{
-		return ($player->isFlying() || $player->isCreative() || $player->isGliding());
+		return ($player->isFlying() || $player->isCreative() || $player->isGliding() || $player->isUnderwater() || BlockUtil::blockUnder(PlayerUtil::getPosition($player), $player->getWorld())->isSameType(VanillaBlocks::WATER()));
 	}
 
 	static function combatInfluenced(Player $player): bool

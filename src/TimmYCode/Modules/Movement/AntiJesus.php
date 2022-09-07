@@ -14,8 +14,8 @@ use TimmYCode\Utils\TickUtil;
 class AntiJesus extends ModuleBase implements Module
 {
 
-	private TickUtil $counter;
-	private float $distance = 0.0, $allowedDistance = 3.2;
+	private TickUtil $counter, $deviationCounter;
+	private float $distance = 0.0, $allowedDistance = 3.2, $deviation = 1;
 	private array $from = array(), $to = array();
 	private int $allowedInAirTicks = 50;
 
@@ -32,6 +32,7 @@ class AntiJesus extends ModuleBase implements Module
 	public function setup(): void
 	{
 		$this->counter = new TickUtil(0);
+		$this->deviationCounter = new TickUtil(0);
 	}
 
 	public function checkA(Event $event, Player $player): string
@@ -55,8 +56,17 @@ class AntiJesus extends ModuleBase implements Module
 				return "Movement speed influenced";
 			}
 
-			if ($this->distance > $this->allowedDistance || $player->getInAirTicks() > $this->allowedInAirTicks) {
+			$this->deviation = $this->to[1] - $this->from[1];
+
+			if($this->deviation == 0) {
+				$this->deviationCounter->increaseTick(1);
+			}else{
+				$this->deviationCounter->resetTick();
+			}
+
+			if ($this->distance > $this->allowedDistance || $player->getInAirTicks() > $this->allowedInAirTicks || $this->deviationCounter->reachedTick(2)) {
 				$this->counter->resetTick();
+				$this->deviationCounter->resetTick();
 				$this->addWarning(1, $player);
 				$this->checkAndFirePunishment($this, $player);
 				return "Jesus?";
