@@ -2,16 +2,17 @@
 
 namespace TimmYCode\Punishment\Methods;
 
-use TimmYCode\Punishment\Punishment;
 use pocketmine\permission\BanEntry;
 use pocketmine\player\Player;
+use TimmYCode\Punishment\Punishment;
 
 class Ban implements Punishment
 {
 
-	private String $reason;
+	private string $reason;
 
-	function __construct(String $reason) {
+	function __construct(string $reason)
+	{
 		$this->reason = $reason;
 	}
 

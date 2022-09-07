@@ -2,7 +2,11 @@
 
 namespace TimmYCode\Event;
 
-use pocketmine\block\VanillaBlocks;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerJumpEvent;
+use pocketmine\event\player\PlayerMoveEvent;
+use pocketmine\event\player\PlayerRespawnEvent;
 use TimmYCode\Event\Custom\ContainerCloseEvent;
 use TimmYCode\Event\Custom\ContainerOpenEvent;
 use TimmYCode\Event\Custom\InventoryContentChangeEvent;
@@ -10,11 +14,6 @@ use TimmYCode\SpyOne;
 use TimmYCode\Utils\BlockUtil;
 use TimmYCode\Utils\ClientUtil;
 use TimmYCode\Utils\PlayerUtil;
-use pocketmine\event\entity\EntityDamageByEntityEvent;
-use pocketmine\event\Listener;
-use pocketmine\event\player\PlayerJumpEvent;
-use pocketmine\event\player\PlayerMoveEvent;
-use pocketmine\event\player\PlayerRespawnEvent;
 
 class ModuleEventListener implements Listener
 {
@@ -89,17 +88,14 @@ class ModuleEventListener implements Listener
 		PlayerUtil::addlastInventoryOpenPos($playerXuid, PlayerUtil::getPosition($player));
 	}
 
-	public function onInventoryContentChangeEvent(InventoryContentChangeEvent $event) {
+	public function onInventoryContentChangeEvent(InventoryContentChangeEvent $event)
+	{
 		$playerXuid = $event->getPlayerXuid();
 		$player = PlayerUtil::xuidToPlayer($playerXuid);
 		$playerIndex = ClientUtil::playerExistsInArray($player, WatchEventListener::$spyOnePlayerList);
 
 		if ($playerIndex == -1) return;
-
-		PlayerUtil::addlastInventoryContentChange($player, ClientUtil::getServerTick(), 1);
-		if(PlayerUtil::getlastInventoryContentChangeTick($player) > 4) {
-			WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiAutoArmor")->checkA($event, $player);
-		}
+		WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiAutoArmor")->checkA($event, $player);
 	}
 
 	public function onContainerClose(ContainerCloseEvent $event)
@@ -110,11 +106,14 @@ class ModuleEventListener implements Listener
 
 		if ($playerIndex == -1) return;
 
+		if(PlayerUtil::isInventoryOpened($playerXuid)) {
 			if (BlockUtil::calculateDistanceWithY(PlayerUtil::getlastInventoryOpenPos($playerXuid), PlayerUtil::getPosition($player)) > 4) {
-				//$player->sendMessage("Distance: " . BlockUtil::calculateDistance(PlayerUtil::getlastInventoryOpenPos($playerXuid), PlayerUtil::getPosition($player)));
 				WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiInventoryMove")->checkA($event, $player);
 			}
-
 			PlayerUtil::addlastInventoryOpenPos($playerXuid, array());
+		} else {
+			//openInventory packet has not been sent
+			WatchEventListener::$spyOnePlayerModuleList[$playerIndex]->getModule("AntiPacketBlock")->checkA($event, $player);
+		}
 	}
 }

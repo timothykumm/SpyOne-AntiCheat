@@ -2,12 +2,12 @@
 
 namespace TimmYCode\Event;
 
-use TimmYCode\Modules\ModuleBase;
-use TimmYCode\SpyOne;
-use TimmYCode\Utils\ClientUtil;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
+use TimmYCode\Modules\ModuleBase;
+use TimmYCode\SpyOne;
+use TimmYCode\Utils\ClientUtil;
 
 class WatchEventListener implements Listener
 {
@@ -16,7 +16,8 @@ class WatchEventListener implements Listener
 	static array $spyOnePlayerModuleList = array();
 	public ModuleBase $moduleBase;
 
-	public function onJoin(PlayerJoinEvent $event) {
+	public function onJoin(PlayerJoinEvent $event)
+	{
 		$this->moduleBase = new ModuleBase();
 		$this->moduleBase->registerModules(true);
 
@@ -25,7 +26,8 @@ class WatchEventListener implements Listener
 		$event->getPlayer()->sendMessage(SpyOne::PREFIX . "is watching you!");
 	}
 
-	public function onLeave(PlayerQuitEvent $event) {
+	public function onLeave(PlayerQuitEvent $event)
+	{
 		unset(self::$spyOnePlayerList[$event->getPlayer()->getXuid()]);
 		unset(self::$spyOnePlayerModuleList[ClientUtil::playerExistsInArray($event->getPlayer(), self::$spyOnePlayerList)]);
 	}

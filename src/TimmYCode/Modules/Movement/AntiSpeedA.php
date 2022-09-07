@@ -2,41 +2,32 @@
 
 namespace TimmYCode\Modules\Movement;
 
+use pocketmine\block\VanillaBlocks;
 use pocketmine\event\Event;
-use TimmYCode\Config\ConfigManager;
-use TimmYCode\Modules\ModuleBase;
-
+use pocketmine\player\Player;
 use TimmYCode\Modules\Module;
-use TimmYCode\Punishment\Methods\Notification;
-use TimmYCode\Punishment\Punishment;
+use TimmYCode\Modules\ModuleBase;
 use TimmYCode\Utils\BlockUtil;
 use TimmYCode\Utils\ClientUtil;
 use TimmYCode\Utils\PlayerUtil;
 use TimmYCode\Utils\TickUtil;
-use pocketmine\block\VanillaBlocks;
-use pocketmine\player\Player;
 
 class AntiSpeedA extends ModuleBase implements Module
 {
 	private TickUtil $counter;
-	private array $from = array(), $to= array();
+	private array $from = array(), $to = array();
 	private float $distance = -1412.0, $yDistance = 0.0, $maxDistance = 0.0;
 	private float $onGroundSpeedFlag = 3.6, $avgOnGroundSpeed = 2.8, $avgOnGroundSpeedReset = 2.8;
 	private int $jumpTickDifference = 0;
 
-	public function getName() : String
+	public function getName(): string
 	{
 		return "AntiSpeedA";
 	}
 
-	public function warningLimit(): int
+	public function getWarningLimit(): int
 	{
 		return 5;
-	}
-
-	public function punishment(): Punishment
-	{
-		return ConfigManager::getPunishment($this->getName());
 	}
 
 	public function setup(): void
@@ -44,7 +35,7 @@ class AntiSpeedA extends ModuleBase implements Module
 		$this->counter = new TickUtil(0);
 	}
 
-	public function checkA(Event $event, Player $player): String
+	public function checkA(Event $event, Player $player): string
 	{
 		if (!$this->isActive() || $this->getIgnored($player)) return "";
 
@@ -58,7 +49,7 @@ class AntiSpeedA extends ModuleBase implements Module
 			$this->yDistance = ($this->to[1] - $this->from[1]);
 			$this->distance = BlockUtil::calculateDistance($this->from, $this->to);
 
-			if(PlayerUtil::movementSpeedInfluenced($player) || !BlockUtil::blockAbove($this->to, $player->getWorld())->isSameType(VanillaBlocks::AIR()) || PlayerUtil::recentlyHurt($player) || PlayerUtil::recentlyRespawned($player)) {
+			if (PlayerUtil::movementSpeedInfluenced($player) || !BlockUtil::blockAbove($this->to, $player->getWorld())->isSameType(VanillaBlocks::AIR()) || PlayerUtil::recentlyHurt($player) || PlayerUtil::recentlyRespawned($player)) {
 				$this->from = array(PlayerUtil::getX($player), PlayerUtil::getY($player), PlayerUtil::getZ($player)); //resets fromDistance else it calculates wrong distance
 				return "Movement speed influenced";
 			}
@@ -81,14 +72,15 @@ class AntiSpeedA extends ModuleBase implements Module
 			$this->counter->resetTick();
 			//return "Distance: ". $this->distance . " Player Ping: " . $player->getNetworkSession()->getPing() . " YDistance: " . $this->yDistance . " MovementSpeed: " . $player->getMovementSpeed();
 			//$event->uncancel();
-			if($this->distance > $this->maxDistance) $this->maxDistance = $this->distance;
+			if ($this->distance > $this->maxDistance) $this->maxDistance = $this->distance;
 			return "Distance " . $this->distance . " MaxDistance " . $this->maxDistance . " " . $this->yDistance;
 		}
 		$this->counter->increaseTick(1);
 		return "";
 	}
 
-	public function onGroundReset() : void {
+	public function onGroundReset(): void
+	{
 		$this->avgOnGroundSpeed = $this->avgOnGroundSpeedReset;
 	}
 

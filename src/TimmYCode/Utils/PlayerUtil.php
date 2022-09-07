@@ -2,10 +2,10 @@
 
 namespace TimmYCode\Utils;
 
-use TimmYCode\SpyOne;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\network\mcpe\protocol\types\DeviceOS;
 use pocketmine\player\Player;
+use TimmYCode\SpyOne;
 
 class PlayerUtil
 {
@@ -15,15 +15,18 @@ class PlayerUtil
 	//InventoryWalk var
 	private static array $inventoryTransactionPickPos = array();
 
-	static function getOS(Player $player) : int {
+	static function getOS(Player $player): int
+	{
 		return $player->getNetworkSession()->getPlayerInfo()->getExtraData()["DeviceOS"];
 	}
 
-	static function getPing(Player $player) : int {
+	static function getPing(Player $player): int
+	{
 		return $player->getNetworkSession()->getPing() != null ? $player->getNetworkSession()->getPing() : 0;
 	}
 
-	static function hasCrosshair(Player $player) : int {
+	static function hasCrosshair(Player $player): int
+	{
 		return self::getOS($player) == DeviceOS::NINTENDO || self::getOS($player) == DeviceOS::OSX ||
 			self::getOS($player) == DeviceOS::PLAYSTATION || self::getOS($player) == DeviceOS::TVOS ||
 			self::getOS($player) == DeviceOS::WIN32 || self::getOS($player) == DeviceOS::WINDOWS_10 ||
@@ -52,7 +55,7 @@ class PlayerUtil
 
 	static function movementSpeedInfluenced(Player $player): bool
 	{
-		return ($player->isFlying() || $player->isCreative() || $player->isGliding() || $player->isInsideOfSolid() || $player->getMovementSpeed() > 0.13 || (SpyOne::getInstance()->getServer()->getTick() - self::getlastDamageCausedByEntityServerTick($player)) < 30 && BlockUtil::blockAroundString(PlayerUtil::getPosition($player),  $player->getWorld(), 1, 1, 1, "Stairs"));
+		return ($player->isFlying() || $player->isCreative() || $player->isGliding() || $player->isInsideOfSolid() || $player->getMovementSpeed() > 0.13 || (SpyOne::getInstance()->getServer()->getTick() - self::getlastDamageCausedByEntityServerTick($player)) < 30 && BlockUtil::blockAroundString(PlayerUtil::getPosition($player), $player->getWorld(), 1, 1, 1, "Stairs"));
 	}
 
 	static function flyingInfluenced(Player $player): bool
@@ -72,7 +75,7 @@ class PlayerUtil
 
 	static function stepsInfluenced(Player $player): bool
 	{
-		return ($player->isFlying() || $player->isCreative() || $player->isGliding() || BlockUtil::blockAroundString(PlayerUtil::getPosition($player),  $player->getWorld(), 1, 1, 1, "Stairs"));
+		return ($player->isFlying() || $player->isCreative() || $player->isGliding() || BlockUtil::blockAroundString(PlayerUtil::getPosition($player), $player->getWorld(), 1, 1, 1, "Stairs"));
 	}
 
 	static function knockbackInfluenced(Player $player): bool
@@ -80,8 +83,8 @@ class PlayerUtil
 		return ($player->isFlying() || $player->isCreative() || $player->isGliding() || $player->isInsideOfSolid() || $player->isUnderwater() ||
 			BlockUtil::blockAroundBlock(PlayerUtil::getPosition($player), $player->getWorld(), 2, 2, 2, VanillaBlocks::COBWEB())
 			|| BlockUtil::blockAroundBlock(PlayerUtil::getPosition($player), $player->getWorld(), 1, 1, 1, VanillaBlocks::LADDER())
-				|| BlockUtil::blockUnder(self::getPosition($player), $player->getWorld())->isSameType(VanillaBlocks::WATER())
-					|| BlockUtil::noBlockAroundBlock(array(PlayerUtil::getX($player), PlayerUtil::getY($player)+2, PlayerUtil::getZ($player)), $player->getWorld(), 1, 1, 1, VanillaBlocks::AIR()));
+			|| BlockUtil::blockUnder(self::getPosition($player), $player->getWorld())->isSameType(VanillaBlocks::WATER())
+			|| BlockUtil::noBlockAroundBlock(array(PlayerUtil::getX($player), PlayerUtil::getY($player) + 2, PlayerUtil::getZ($player)), $player->getWorld(), 1, 1, 1, VanillaBlocks::AIR()));
 	}
 
 	static function isJumping(Player $player): bool
@@ -89,17 +92,17 @@ class PlayerUtil
 		return $player->getJumpVelocity() == 0.42;
 	}
 
-	static function entityToPlayer($entityNameTag, $entityId) : ?Player
+	static function entityToPlayer($entityNameTag, $entityId): ?Player
 	{
 		foreach (SpyOne::getInstance()->getServer()->getOnlinePlayers() as $onlinePlayer) {
-			if ((strcmp($onlinePlayer->getNameTag(),$entityNameTag) == 0) && $onlinePlayer->getId() == $entityId) {
+			if ((strcmp($onlinePlayer->getNameTag(), $entityNameTag) == 0) && $onlinePlayer->getId() == $entityId) {
 				return $onlinePlayer;
 			}
 		}
 		return null;
 	}
 
-	static function xuidToPlayer($playerXuid) : ?Player
+	static function xuidToPlayer($playerXuid): ?Player
 	{
 		foreach (SpyOne::getInstance()->getServer()->getOnlinePlayers() as $onlinePlayer) {
 			if (strcmp($onlinePlayer->getXuid(), $playerXuid) == 0) {
@@ -109,10 +112,10 @@ class PlayerUtil
 		return null;
 	}
 
-	static function isPlayer($entityNameTag, $entityId) : bool
+	static function isPlayer($entityNameTag, $entityId): bool
 	{
 		foreach (SpyOne::getInstance()->getServer()->getOnlinePlayers() as $onlinePlayer) {
-			if ((strcmp($onlinePlayer->getNameTag(),$entityNameTag) == 0) && $onlinePlayer->getId() == $entityId) {
+			if ((strcmp($onlinePlayer->getNameTag(), $entityNameTag) == 0) && $onlinePlayer->getId() == $entityId) {
 				return true;
 			}
 		}
@@ -158,20 +161,20 @@ class PlayerUtil
 	static function addlastInventoryContentChange(Player $player, int $serverTick, int $count): void
 	{
 		$playerPositionInArray = ClientUtil::playerXuidExistsInArray($player->getXuid(), self::$inventoryContentChanged);
-		if($playerPositionInArray != -1) {
+		if ($playerPositionInArray != -1) {
 
-			if(self::$inventoryContentChanged[$player->getXuid()][0] != $serverTick) {
-				self::$inventoryContentChanged[$player->getXuid()][1]  = 0;
+			if (self::$inventoryContentChanged[$player->getXuid()][0] != $serverTick) {
+				self::$inventoryContentChanged[$player->getXuid()][1] = 0;
 			}
 
 			self::$inventoryContentChanged[$player->getXuid()][0] = $serverTick;
 			self::$inventoryContentChanged[$player->getXuid()][1] += $count;
-		} else{
+		} else {
 			self::$inventoryContentChanged += [$player->getXuid() => array($serverTick, $count)];
 		}
 	}
 
-	static function addlastInventoryOpenPos(String $playerXuid, array $pos): void
+	static function addlastInventoryOpenPos(string $playerXuid, array $pos): void
 	{
 		$playerPositionInArray = ClientUtil::playerXuidExistsInArray($playerXuid, self::$inventoryTransactionPickPos);
 		$playerPositionInArray != -1 ? self::$inventoryTransactionPickPos[$playerXuid] = $pos : self::$inventoryTransactionPickPos += [$playerXuid => $pos];
@@ -185,73 +188,77 @@ class PlayerUtil
 
 	static function getlastDamageCausedByEntityServerTick(Player $player): int
 	{
-		$serverTick =  ClientUtil::getValueOfArray(self::$damageCausedByEntityServerTick, $player->getXuid());
+		$serverTick = ClientUtil::getValueOfArray(self::$damageCausedByEntityServerTick, $player->getXuid());
 		return $serverTick != null ? $serverTick : 0;
 	}
 
 	static function getlastDamageCausedByPlayerServerTick(Player $player): int
 	{
-		$serverTick =  ClientUtil::getValueOfArray(self::$damageCausedByPlayerServerTick, $player->getXuid());
+		$serverTick = ClientUtil::getValueOfArray(self::$damageCausedByPlayerServerTick, $player->getXuid());
 		return $serverTick != null ? $serverTick : 0;
 	}
 
 	static function getlastJumpServerTick(Player $player): int
 	{
-		$serverTick =  ClientUtil::getValueOfArray(self::$jumpServerTick, $player->getXuid());
+		$serverTick = ClientUtil::getValueOfArray(self::$jumpServerTick, $player->getXuid());
 		return $serverTick != null ? $serverTick : 0;
 	}
 
 	static function getlastJumpPosition(Player $player): array
 	{
-		$jumpPosition =  ClientUtil::getValueOfArray(self::$jumpPosition, ClientUtil::playerXuidExistsInArray($player->getXuid(), self::$jumpServerTick));
+		$jumpPosition = ClientUtil::getValueOfArray(self::$jumpPosition, ClientUtil::playerXuidExistsInArray($player->getXuid(), self::$jumpServerTick));
 		return $jumpPosition != null ? $jumpPosition : self::getPosition($player);
 	}
 
 	static function getlastDeathServerTick(Player $player): int
 	{
-		$serverTick =  ClientUtil::getValueOfArray(self::$deathServerTick, $player->getXuid());
+		$serverTick = ClientUtil::getValueOfArray(self::$deathServerTick, $player->getXuid());
 		return $serverTick != null ? $serverTick : 0;
 	}
 
 	static function getlastRespawnServerTick(Player $player): int
 	{
-		$serverTick =  ClientUtil::getValueOfArray(self::$respawnServerTick, $player->getXuid());
+		$serverTick = ClientUtil::getValueOfArray(self::$respawnServerTick, $player->getXuid());
 		return $serverTick != null ? $serverTick : 0;
 	}
 
 	static function getlastNotificationServerTick(Player $player): int
 	{
-		$serverTick =  ClientUtil::getValueOfArray(self::$notificationServerTick, $player->getXuid());
+		$serverTick = ClientUtil::getValueOfArray(self::$notificationServerTick, $player->getXuid());
 		return $serverTick != null ? $serverTick : 0;
 	}
 
 	static function getlastInventoryContentChangeTick(Player $player): int
 	{
-		$serverTick =  ClientUtil::getValueOfArray(self::$inventoryContentChanged, $player->getXuid());
+		$serverTick = ClientUtil::getValueOfArray(self::$inventoryContentChanged, $player->getXuid());
 		return $serverTick[1] != null ? $serverTick[1] : 0;
 	}
 
-	static function getlastInventoryOpenPos(String $playerXuid): array
+	static function getlastInventoryOpenPos(string $playerXuid): array
 	{
-		$pos =  ClientUtil::getValueOfArray(self::$inventoryTransactionPickPos, $playerXuid);
+		$pos = ClientUtil::getValueOfArray(self::$inventoryTransactionPickPos, $playerXuid);
 		return $pos != null ? $pos : array();
+	}
+
+	static function isInventoryOpened(String $playerxuid) {
+		return !empty(PlayerUtil::getlastInventoryOpenPos($playerxuid));
 	}
 
 	static function recentlyDied(Player $player): bool
 	{
-		$serverTick =  ClientUtil::getValueOfArray(self::$deathServerTick, $player->getXuid()) != null ? ClientUtil::getValueOfArray(self::$deathServerTick, $player->getXuid()) : 0;
+		$serverTick = ClientUtil::getValueOfArray(self::$deathServerTick, $player->getXuid()) != null ? ClientUtil::getValueOfArray(self::$deathServerTick, $player->getXuid()) : 0;
 		return (SpyOne::getInstance()->getServer()->getTick() - $serverTick) < 30;
 	}
 
 	static function recentlyHurt(Player $player): bool
 	{
-		$serverTick =  ClientUtil::getValueOfArray(self::$damageCausedByEntityServerTick, $player->getXuid()) != null ? ClientUtil::getValueOfArray(self::$damageCausedByEntityServerTick, $player->getXuid()) : 0;
+		$serverTick = ClientUtil::getValueOfArray(self::$damageCausedByEntityServerTick, $player->getXuid()) != null ? ClientUtil::getValueOfArray(self::$damageCausedByEntityServerTick, $player->getXuid()) : 0;
 		return (SpyOne::getInstance()->getServer()->getTick() - $serverTick) < 30;
 	}
 
 	static function recentlyRespawned(Player $player): bool
 	{
-		$serverTick =  ClientUtil::getValueOfArray(self::$respawnServerTick, $player->getXuid()) != null ? ClientUtil::getValueOfArray(self::$respawnServerTick, $player->getXuid()) : 0;
+		$serverTick = ClientUtil::getValueOfArray(self::$respawnServerTick, $player->getXuid()) != null ? ClientUtil::getValueOfArray(self::$respawnServerTick, $player->getXuid()) : 0;
 		return (SpyOne::getInstance()->getServer()->getTick() - $serverTick) < 30;
 	}
 

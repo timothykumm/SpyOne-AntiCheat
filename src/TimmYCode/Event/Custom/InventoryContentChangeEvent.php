@@ -12,15 +12,17 @@ use pocketmine\player\Player;
 /**
  * Called when a player right clicks armor!?.
  */
-
-class InventoryContentChangeEvent extends Event implements Cancellable{
+class InventoryContentChangeEvent extends Event implements Cancellable
+{
 	use CancellableTrait;
 
-	public function __construct(Player $player){
+	public function __construct(Player $player)
+	{
 		$this->playerXuid = $player->getXuid();
 	}
 
-	public function getPlayerXuid() : String{
+	public function getPlayerXuid(): string
+	{
 		return $this->playerXuid;
 	}
 

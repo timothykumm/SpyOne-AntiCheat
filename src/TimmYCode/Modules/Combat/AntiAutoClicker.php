@@ -3,14 +3,11 @@
 namespace TimmYCode\Modules\Combat;
 
 use pocketmine\event\Event;
-use TimmYCode\Config\ConfigManager;
-use TimmYCode\Modules\ModuleBase;
+use pocketmine\player\Player;
 use TimmYCode\Modules\Module;
-use TimmYCode\Punishment\Methods\Notification;
-use TimmYCode\Punishment\Punishment;
+use TimmYCode\Modules\ModuleBase;
 use TimmYCode\Utils\ClientUtil;
 use TimmYCode\Utils\TickUtil;
-use pocketmine\player\Player;
 
 class AntiAutoClicker extends ModuleBase implements Module
 {
@@ -18,19 +15,14 @@ class AntiAutoClicker extends ModuleBase implements Module
 	private float $cps = 0.0;
 	private int $startTick = 0;
 
-	public function getName() : String
+	public function getName(): string
 	{
 		return "AntiAutoClicker";
 	}
 
-	public function warningLimit(): int
+	public function getWarningLimit(): int
 	{
 		return 1;
-	}
-
-	public function punishment(): Punishment
-	{
-		return ConfigManager::getPunishment($this->getName());
 	}
 
 	public function setup(): void
@@ -45,9 +37,9 @@ class AntiAutoClicker extends ModuleBase implements Module
 
 		$this->hitCount->increaseTick(1);
 
-		if($this->hitCount->reachedTick(1)) {
+		if ($this->hitCount->reachedTick(1)) {
 			$this->startTick = ClientUtil::getServerTick();
-		} else if($this->hitCount->reachedTick(10)){
+		} else if ($this->hitCount->reachedTick(10)) {
 			$this->cps = (ClientUtil::getServerTick() - $this->startTick);
 			$this->hitCount->resetTick();
 			$damager->sendMessage($this->cps);

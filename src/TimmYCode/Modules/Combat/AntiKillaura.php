@@ -3,31 +3,23 @@
 namespace TimmYCode\Modules\Combat;
 
 use pocketmine\event\Event;
-use TimmYCode\Config\ConfigManager;
-use TimmYCode\Modules\ModuleBase;
-use TimmYCode\Modules\Module;
-use TimmYCode\Punishment\Methods\Notification;
-use TimmYCode\Punishment\Punishment;
-use TimmYCode\Utils\PlayerUtil;
 use pocketmine\player\Player;
+use TimmYCode\Modules\Module;
+use TimmYCode\Modules\ModuleBase;
+use TimmYCode\Utils\PlayerUtil;
 
 class AntiKillaura extends ModuleBase implements Module
 {
 	private float $lengthAlowedCrosshair = 1.2, $lengthAlowedNoCrosshair = 3.3;
 
-	public function getName() : String
+	public function getName(): string
 	{
 		return "AntiKillaura";
 	}
 
-	public function warningLimit(): int
+	public function getWarningLimit(): int
 	{
 		return 5;
-	}
-
-	public function punishment(): Punishment
-	{
-		return ConfigManager::getPunishment($this->getName());
 	}
 
 	public function setup(): void
@@ -54,12 +46,12 @@ class AntiKillaura extends ModuleBase implements Module
 		$crossLengthFoot = $crossPosFoot->length();
 		$crossLengthHead = $crossPosHead->length();
 
-		if($crossLengthFoot > $this->lengthAlowedCrosshair && $crossLengthHead > $this->lengthAlowedCrosshair) {
-			if(PlayerUtil::hasCrosshair($damager)) {
+		if ($crossLengthFoot > $this->lengthAlowedCrosshair && $crossLengthHead > $this->lengthAlowedCrosshair) {
+			if (PlayerUtil::hasCrosshair($damager)) {
 				$this->addWarning(3, $damager);
 				$this->checkAndFirePunishment($this, $damager);
 				return "Killaura crosshair?";
-			}else if($crossLengthFoot > $this->lengthAlowedNoCrosshair && $crossLengthHead > $this->lengthAlowedNoCrosshair){
+			} else if ($crossLengthFoot > $this->lengthAlowedNoCrosshair && $crossLengthHead > $this->lengthAlowedNoCrosshair) {
 				$this->addWarning(5, $damager);
 				$this->checkAndFirePunishment($this, $damager);
 				return "Killaura no crosshair?";

@@ -2,17 +2,14 @@
 
 namespace TimmYCode\Modules\Movement;
 
+use pocketmine\block\VanillaBlocks;
 use pocketmine\event\Event;
-use TimmYCode\Config\ConfigManager;
-use TimmYCode\Modules\ModuleBase;
+use pocketmine\player\Player;
 use TimmYCode\Modules\Module;
-use TimmYCode\Punishment\Methods\Notification;
-use TimmYCode\Punishment\Punishment;
+use TimmYCode\Modules\ModuleBase;
 use TimmYCode\Utils\BlockUtil;
 use TimmYCode\Utils\PlayerUtil;
 use TimmYCode\Utils\TickUtil;
-use pocketmine\block\VanillaBlocks;
-use pocketmine\player\Player;
 
 class AntiJesus extends ModuleBase implements Module
 {
@@ -27,14 +24,9 @@ class AntiJesus extends ModuleBase implements Module
 		return "AntiJesus";
 	}
 
-	public function warningLimit(): int
+	public function getWarningLimit(): int
 	{
 		return 2;
-	}
-
-	public function punishment(): Punishment
-	{
-		return ConfigManager::getPunishment($this->getName());
 	}
 
 	public function setup(): void
@@ -63,7 +55,7 @@ class AntiJesus extends ModuleBase implements Module
 				return "Movement speed influenced";
 			}
 
-			if($this->distance > $this->allowedDistance || $player->getInAirTicks() > $this->allowedInAirTicks) {
+			if ($this->distance > $this->allowedDistance || $player->getInAirTicks() > $this->allowedInAirTicks) {
 				$this->counter->resetTick();
 				$this->addWarning(1, $player);
 				$this->checkAndFirePunishment($this, $player);

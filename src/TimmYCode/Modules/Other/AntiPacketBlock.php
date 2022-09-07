@@ -6,15 +6,14 @@ use pocketmine\event\Event;
 use pocketmine\player\Player;
 use TimmYCode\Modules\Module;
 use TimmYCode\Modules\ModuleBase;
-use TimmYCode\Utils\PlayerUtil;
 
 
-class AntiInventoryMove extends ModuleBase implements Module
+class AntiPacketBlock extends ModuleBase implements Module
 {
 
 	public function getName(): string
 	{
-		return "AntiInventoryMove";
+		return "AntiPacketBlock";
 	}
 
 	public function getWarningLimit(): int
@@ -31,14 +30,10 @@ class AntiInventoryMove extends ModuleBase implements Module
 	{
 		if (!$this->isActive() || $this->getIgnored($player)) return "";
 
-		if (!PlayerUtil::recentlyRespawned($player) && !PlayerUtil::recentlyDied($player) && !PlayerUtil::recentlyHurt($player)) {
-			$this->addWarning(1, $player);
-			$this->checkAndFirePunishment($this, $player);
+		$this->addWarning(1, $player);
+		$this->checkAndFirePunishment($this, $player);
 
-			return "Inventory Move";
-		}
-
-		return "";
+		return "Client blocked package";
 	}
 
 }

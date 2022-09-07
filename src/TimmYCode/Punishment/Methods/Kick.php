@@ -2,15 +2,16 @@
 
 namespace TimmYCode\Punishment\Methods;
 
-use TimmYCode\Punishment\Punishment;
 use pocketmine\player\Player;
+use TimmYCode\Punishment\Punishment;
 
 class Kick implements Punishment
 {
 
-	private String $reason;
+	private string $reason;
 
-	function __construct(String $reason) {
+	function __construct(string $reason)
+	{
 		$this->reason = $reason;
 	}
 

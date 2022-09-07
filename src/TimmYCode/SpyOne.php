@@ -2,10 +2,10 @@
 
 namespace TimmYCode;
 
+use pocketmine\plugin\PluginBase;
 use TimmYCode\Event\CallCustomEvents;
 use TimmYCode\Event\ModuleEventListener;
 use TimmYCode\Event\WatchEventListener;
-use pocketmine\plugin\PluginBase;
 
 class SpyOne extends PluginBase
 {
@@ -21,7 +21,8 @@ class SpyOne extends PluginBase
 		$this->getServer()->getPluginManager()->registerEvents(new CallCustomEvents(), $this);
 	}
 
-	public static function getInstance(): self {
+	public static function getInstance(): self
+	{
 		return self::$instance;
 	}
 

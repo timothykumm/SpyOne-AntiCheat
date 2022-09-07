@@ -14,10 +14,11 @@ use TimmYCode\Utils\PlayerUtil;
 class CallCustomEvents implements Listener
 {
 
-	public function sentPackagesListener(DataPacketSendEvent $event) {
+	public function sentPackagesListener(DataPacketSendEvent $event)
+	{
 		foreach ($event->getPackets() as $packet) {
 
-			if(str_ends_with(get_class($packet), "ContainerOpenPacket")) {
+			if (str_ends_with(get_class($packet), "ContainerOpenPacket")) {
 
 				foreach ($event->getTargets() as $target) {
 					$ev = new ContainerOpenEvent($target->getPlayer(), PlayerUtil::getPosition($target->getPlayer()));
@@ -26,7 +27,7 @@ class CallCustomEvents implements Listener
 				}
 			}
 
-			if(str_ends_with(get_class($packet), "ContainerClosePacket")) {
+			if (str_ends_with(get_class($packet), "ContainerClosePacket")) {
 				foreach ($event->getTargets() as $target) {
 					$ev = new ContainerCloseEvent($target->getPlayer(), PlayerUtil::getPosition($target->getPlayer()));
 					$ev->call();
@@ -34,7 +35,7 @@ class CallCustomEvents implements Listener
 				}
 			}
 
-			if(str_ends_with(get_class($packet), "InventoryContentPacket")) {
+			if (str_ends_with(get_class($packet), "InventoryContentPacket")) {
 				foreach ($event->getTargets() as $target) {
 					$ev = new InventoryContentChangeEvent($target->getPlayer());
 					$ev->call();
@@ -42,16 +43,16 @@ class CallCustomEvents implements Listener
 				}
 			}
 
-			/*if(!str_ends_with(get_class($packet), "TextPacket")) {
+			if(!str_ends_with(get_class($packet), "TextPacket")) {
 			SpyOne::getInstance()->getServer()->broadcastMessage(get_class($packet));
-			}*/
+			}
 		}
 	}
 
-	/*public function receivedPackagesListener(DataPacketReceiveEvent $event) {
+	public function receivedPackagesListener(DataPacketReceiveEvent $event) {
 		if(!str_ends_with(get_class($event->getPacket()), "PlayerAuthInputPacket")) {
 			SpyOne::getInstance()->getServer()->broadcastMessage(get_class($event->getPacket()));
 		}
-	}*/
+	}
 
 }

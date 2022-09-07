@@ -75,6 +75,11 @@ spyone:
       notify: true
       punishment: warn
       message: "SpyOne caught you cheating"
+    packetblock:
+      enable: true
+      notify: true
+      punishment: warn
+      message: "SpyOne caught you cheating"
   discord:
     enable: false
     webhook: "" #webhook url

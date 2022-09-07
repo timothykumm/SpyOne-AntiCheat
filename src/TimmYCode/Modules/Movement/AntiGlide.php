@@ -2,17 +2,14 @@
 
 namespace TimmYCode\Modules\Movement;
 
+use pocketmine\block\VanillaBlocks;
 use pocketmine\event\Event;
-use TimmYCode\Config\ConfigManager;
-use TimmYCode\Modules\ModuleBase;
+use pocketmine\player\Player;
 use TimmYCode\Modules\Module;
-use TimmYCode\Punishment\Methods\Notification;
-use TimmYCode\Punishment\Punishment;
+use TimmYCode\Modules\ModuleBase;
 use TimmYCode\Utils\BlockUtil;
 use TimmYCode\Utils\PlayerUtil;
 use TimmYCode\Utils\TickUtil;
-use pocketmine\block\VanillaBlocks;
-use pocketmine\player\Player;
 
 class AntiGlide extends ModuleBase implements Module
 {
@@ -20,19 +17,14 @@ class AntiGlide extends ModuleBase implements Module
 	private float $from = 0.0, $to = 0.0, $fallDistance = 0.0, $previousFallDistance = -9693;
 	private float $deviation = 0.001;
 
-	public function getName() : String
+	public function getName(): string
 	{
 		return "AntiGlide";
 	}
 
-	public function warningLimit(): int
+	public function getWarningLimit(): int
 	{
 		return 1;
-	}
-
-	public function punishment(): Punishment
-	{
-		return ConfigManager::getPunishment($this->getName());
 	}
 
 	public function setup(): void
@@ -41,7 +33,7 @@ class AntiGlide extends ModuleBase implements Module
 		$this->glideCounter = new TickUtil(0);
 	}
 
-	public function checkA(Event $event, Player $player): String
+	public function checkA(Event $event, Player $player): string
 	{
 		if (!$this->isActive() || $this->getIgnored($player)) return "";
 
@@ -51,7 +43,7 @@ class AntiGlide extends ModuleBase implements Module
 			return "";
 		}
 
-		if($player->isOnGround() || PlayerUtil::flyingInfluenced($player)) {
+		if ($player->isOnGround() || PlayerUtil::flyingInfluenced($player)) {
 			$this->resetTicks();
 			$this->resetDistances();
 			return "No Motion or flying influenced";
@@ -64,11 +56,11 @@ class AntiGlide extends ModuleBase implements Module
 		$sum = $this->fallDistance - $this->previousFallDistance;
 		if ($sum <= $this->deviation && $sum >= -$this->deviation && $this->to != 0.0) {
 
-			if(BlockUtil::blockAroundBlock(PlayerUtil::getPosition($player), $player->getWorld(), 2, 2, 2, VanillaBlocks::COBWEB())
-				|| BlockUtil::blockAroundBlock(PlayerUtil::getPosition($player), $player->getWorld(), 1, 1, 1 ,VanillaBlocks::LADDER())) {
-			$this->resetTicks();
-			$this->resetDistances();
-			return "In Cobweb or on ladder";
+			if (BlockUtil::blockAroundBlock(PlayerUtil::getPosition($player), $player->getWorld(), 2, 2, 2, VanillaBlocks::COBWEB())
+				|| BlockUtil::blockAroundBlock(PlayerUtil::getPosition($player), $player->getWorld(), 1, 1, 1, VanillaBlocks::LADDER())) {
+				$this->resetTicks();
+				$this->resetDistances();
+				return "In Cobweb or on ladder";
 			}
 
 			$this->glideCounter->increaseTick(1);
@@ -76,7 +68,7 @@ class AntiGlide extends ModuleBase implements Module
 
 		$this->previousFallDistance = $this->fallDistance;
 
-		if($this->glideCounter->reachedTick(3)) {
+		if ($this->glideCounter->reachedTick(3)) {
 			$this->addWarning(1, $player);
 			$this->glideCounter->resetTick();
 			$this->checkAndFirePunishment($this, $player);
@@ -86,12 +78,14 @@ class AntiGlide extends ModuleBase implements Module
 		return $sum;
 	}
 
-	function resetDistances(): void {
+	function resetDistances(): void
+	{
 		$this->fallDistance = 0.0;
 		$this->previousFallDistance = 0;
 	}
 
-	function resetTicks() {
+	function resetTicks()
+	{
 		$this->counter->resetTick();
 		$this->glideCounter->resetTick();
 	}

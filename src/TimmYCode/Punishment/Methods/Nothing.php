@@ -2,13 +2,14 @@
 
 namespace TimmYCode\Punishment\Methods;
 
-use TimmYCode\Punishment\Punishment;
 use pocketmine\player\Player;
+use TimmYCode\Punishment\Punishment;
 
 class Nothing implements Punishment
 {
 
-	function __construct(String $reason) {
+	function __construct(string $reason)
+	{
 
 	}
 

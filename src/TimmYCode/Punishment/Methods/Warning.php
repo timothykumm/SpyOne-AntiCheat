@@ -2,16 +2,17 @@
 
 namespace TimmYCode\Punishment\Methods;
 
+use pocketmine\player\Player;
 use TimmYCode\Punishment\Punishment;
 use TimmYCode\SpyOne;
-use pocketmine\player\Player;
 
 class Warning implements Punishment
 {
 
-	private String $reason;
+	private string $reason;
 
-	function __construct(String $reason) {
+	function __construct(string $reason)
+	{
 		$this->reason = $reason;
 	}
 
