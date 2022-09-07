@@ -3,6 +3,7 @@
 namespace TimmYCode\Utils;
 
 use pocketmine\block\Block;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\world\World;
 
 class BlockUtil
@@ -20,16 +21,18 @@ class BlockUtil
 
 	static function blockUnder(array $vector1, World $world): Block
 	{
-		return $world->getBlockAt($vector1[0], $vector1[1] - 1, $vector1[2]);
+		return !empty($vector1) ? $world->getBlockAt($vector1[0], $vector1[1] - 1, $vector1[2]) : VanillaBlocks::AIR();
 	}
 
 	static function blockAbove(array $vector1, World $world): Block
 	{
-		return $world->getBlockAt($vector1[0], $vector1[1] + 2, $vector1[2]);
+		return !empty($vector1) ? $world->getBlockAt($vector1[0], $vector1[1] + 2, $vector1[2]) : VanillaBlocks::AIR();
 	}
 
 	static function blockAroundBlock(array $vector1, World $world, int $searchRadiusX, int $searchRadiusY, int $searchRadiusZ, Block $block): bool
 	{
+		if(empty($vector1)) return false;
+
 		for ($x = $vector1[0] - $searchRadiusX; $x < $vector1[0] + $searchRadiusX; $x++) {
 			for ($y = $vector1[1] - $searchRadiusY; $y < $vector1[1] + $searchRadiusY; $y++) {
 				for ($z = $vector1[2] - $searchRadiusZ; $z < $vector1[2] + $searchRadiusZ; $z++) {
@@ -44,6 +47,8 @@ class BlockUtil
 
 	static function noBlockAroundBlock(array $vector1, World $world, int $searchRadiusX, int $searchRadiusY, int $searchRadiusZ, Block $block): bool
 	{
+		if(empty($vector1)) return false;
+
 		for ($x = $vector1[0] - $searchRadiusX; $x < $vector1[0] + $searchRadiusX; $x++) {
 			for ($y = $vector1[1] - $searchRadiusY; $y < $vector1[1] + $searchRadiusY; $y++) {
 				for ($z = $vector1[2] - $searchRadiusZ; $z < $vector1[2] + $searchRadiusZ; $z++) {
@@ -58,6 +63,9 @@ class BlockUtil
 
 	static function blockAroundString(array $vector1, World $world, int $searchRadiusX, int $searchRadiusY, int $searchRadiusZ, string $block): bool
 	{
+
+		if(empty($vector1)) return false;
+
 		for ($x = $vector1[0] - $searchRadiusX; $x < $vector1[0] + $searchRadiusX; $x++) {
 			for ($y = $vector1[1] - $searchRadiusY; $y < $vector1[1] + $searchRadiusY; $y++) {
 				for ($z = $vector1[2] - $searchRadiusZ; $z < $vector1[2] + $searchRadiusZ; $z++) {

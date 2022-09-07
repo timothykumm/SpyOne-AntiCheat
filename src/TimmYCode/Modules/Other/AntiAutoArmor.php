@@ -35,10 +35,10 @@ class AntiAutoArmor extends ModuleBase implements Module
 		PlayerUtil::addlastInventoryContentChange($player, ClientUtil::getServerTick(), 1);
 
 		//horion autoarmor
-		/*if (PlayerUtil::getlastInventoryContentChangeTick($player) > 4) {
+		if (PlayerUtil::getlastInventoryContentChangeTick($player) > 4) {
 			$this->addWarning(1, $player);
 			$this->checkAndFirePunishment($this, $player);
-		}*/
+		}
 
 		//false positive if player right clicks hotbar armor
 		//if(!PlayerUtil::isInventoryOpened($player->getXuid())) { }

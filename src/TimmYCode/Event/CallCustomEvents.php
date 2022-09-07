@@ -43,16 +43,16 @@ class CallCustomEvents implements Listener
 				}
 			}
 
-			if(!str_ends_with(get_class($packet), "TextPacket")) {
+			/*if(!str_ends_with(get_class($packet), "TextPacket")) {
 			SpyOne::getInstance()->getServer()->broadcastMessage(get_class($packet));
-			}
+			}*/
 		}
 	}
 
-	public function receivedPackagesListener(DataPacketReceiveEvent $event) {
+	/*public function receivedPackagesListener(DataPacketReceiveEvent $event) {
 		if(!str_ends_with(get_class($event->getPacket()), "PlayerAuthInputPacket")) {
 			SpyOne::getInstance()->getServer()->broadcastMessage(get_class($event->getPacket()));
 		}
-	}
+	}*/
 
 }
